@@ -1,4 +1,5 @@
 import { Star, Heart, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 interface Product {
   id: number;
@@ -16,6 +17,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, isFlashSale }: ProductCardProps) => {
+  const { addItem } = useCart();
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
@@ -33,7 +35,10 @@ const ProductCard = ({ product, isFlashSale }: ProductCardProps) => {
         <button className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-card/80 backdrop-blur-sm p-1.5 rounded-full hover:bg-card">
           <Heart className="w-4 h-4 text-muted-foreground hover:text-sale" />
         </button>
-        <button className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-primary-foreground p-2 rounded-full hover:bg-primary-dark">
+        <button
+          onClick={() => addItem({ id: product.id, name: product.name, price: product.price, image: product.image })}
+          className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-primary-foreground p-2 rounded-full hover:bg-primary-dark"
+        >
           <ShoppingCart className="w-4 h-4" />
         </button>
       </div>

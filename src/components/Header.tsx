@@ -1,5 +1,6 @@
 import { Search, ShoppingCart, User, Menu, Heart, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 const categories = [
   "Phones & Tablets", "Electronics", "Fashion", "Home & Office",
@@ -8,7 +9,7 @@ const categories = [
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount] = useState(3);
+  const { totalItems, setIsOpen } = useCart();
 
   return (
     <header className="sticky top-0 z-50">
@@ -59,12 +60,12 @@ const Header = () => {
               <Heart className="w-5 h-5" />
               <span>Wishlist</span>
             </button>
-            <button className="relative flex items-center gap-1.5 hover:opacity-80 text-sm">
+            <button className="relative flex items-center gap-1.5 hover:opacity-80 text-sm" onClick={() => setIsOpen(true)}>
               <ShoppingCart className="w-5 h-5" />
               <span className="hidden md:inline">Cart</span>
-              {cartCount > 0 && (
+              {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                  {cartCount}
+                  {totalItems}
                 </span>
               )}
             </button>
