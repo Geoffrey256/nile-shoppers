@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react";
 import { Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
+import { allProducts } from "@/data/products";
 
-const flashProducts = [
-  { id: 1, name: "Wireless Earbuds Pro", price: 29.99, originalPrice: 79.99, image: "🎧", rating: 4.5, sold: 234 },
-  { id: 2, name: "Smart Watch Series 5", price: 89.99, originalPrice: 199.99, image: "⌚", rating: 4.3, sold: 189 },
-  { id: 3, name: "Portable Bluetooth Speaker", price: 19.99, originalPrice: 49.99, image: "🔊", rating: 4.7, sold: 456 },
-  { id: 4, name: "USB-C Fast Charger 65W", price: 14.99, originalPrice: 39.99, image: "🔌", rating: 4.6, sold: 312 },
-  { id: 5, name: "Laptop Stand Adjustable", price: 24.99, originalPrice: 59.99, image: "💻", rating: 4.4, sold: 178 },
-  { id: 6, name: "LED Desk Lamp", price: 18.99, originalPrice: 44.99, image: "💡", rating: 4.2, sold: 267 },
-];
+const flashProducts = allProducts.filter((p) => p.id >= 1 && p.id <= 6);
 
 const FlashSale = () => {
   const [timeLeft, setTimeLeft] = useState({ hours: 8, minutes: 45, seconds: 30 });
