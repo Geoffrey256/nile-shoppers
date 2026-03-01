@@ -137,6 +137,63 @@ export const allProducts: Product[] = [
       { id: 21, author: "Carlos R.", rating: 4, date: "2026-02-13", comment: "Classic style, great lens quality.", verified: true },
     ],
   },
+  // Aquarium products
+  { id: 20, name: "LED Aquarium Light Bar 36\"", price: 34.99, originalPrice: 59.99, image: "💡", rating: 4.5, sold: 312,
+    description: "Full-spectrum LED light bar designed for freshwater and saltwater aquariums. Promotes healthy plant and coral growth with adjustable brightness.",
+    specs: { "Length": "36 inches", "LED Type": "Full Spectrum RGB+W", "Wattage": "24W", "Waterproof": "IP67" },
+    reviews: [
+      { id: 22, author: "Marina F.", rating: 5, date: "2026-02-18", comment: "My plants are thriving under this light!", verified: true },
+    ],
+  },
+  { id: 21, name: "Aquarium Filter Canister 200L", price: 64.99, originalPrice: 99.99, image: "🐠", rating: 4.6, sold: 198,
+    description: "Multi-stage canister filter for aquariums up to 200 liters. Ultra-quiet operation with biological, mechanical, and chemical filtration.",
+    specs: { "Capacity": "Up to 200L", "Flow Rate": "800L/h", "Stages": "4-stage filtration", "Noise": "<35dB" },
+    reviews: [
+      { id: 23, author: "Derek H.", rating: 4, date: "2026-02-10", comment: "Very quiet and keeps the water crystal clear.", verified: true },
+    ],
+  },
+  { id: 22, name: "Automatic Fish Feeder Digital", price: 19.99, originalPrice: 34.99, image: "🐟", rating: 4.3, sold: 445,
+    description: "Programmable automatic fish feeder with LCD display. Set up to 4 feeding times per day with adjustable portion sizes.",
+    specs: { "Feedings": "1-4 per day", "Capacity": "200ml", "Power": "2x AA batteries", "Display": "LCD" },
+    reviews: [
+      { id: 24, author: "Sophie L.", rating: 5, date: "2026-01-29", comment: "Perfect for when I travel. My fish are always fed on time!", verified: true },
+    ],
+  },
+  { id: 23, name: "Aquarium Heater 300W Submersible", price: 22.99, originalPrice: 39.99, image: "🌡️", rating: 4.4, sold: 276,
+    description: "Fully submersible aquarium heater with precise thermostat control. Shatterproof quartz glass construction for safety.",
+    specs: { "Power": "300W", "Range": "18-34°C", "Tank Size": "Up to 300L", "Material": "Quartz glass" },
+    reviews: [],
+  },
+  // Cooking appliances
+  { id: 24, name: "Digital Air Fryer 5.5L", price: 59.99, originalPrice: 99.99, image: "🍟", rating: 4.7, sold: 1567,
+    description: "Large capacity digital air fryer with 8 preset cooking programs. Cook crispy food with up to 85% less oil.",
+    specs: { "Capacity": "5.5L", "Power": "1700W", "Programs": "8 presets", "Temperature": "80-200°C" },
+    reviews: [
+      { id: 25, author: "Jenny K.", rating: 5, date: "2026-02-21", comment: "Makes the crispiest fries! Love it!", verified: true },
+      { id: 26, author: "Paul M.", rating: 5, date: "2026-02-15", comment: "Use it every day. Easy to clean too.", verified: true },
+    ],
+  },
+  { id: 25, name: "Stand Mixer 6-Speed 4.5L", price: 129.99, originalPrice: 199.99, image: "🧁", rating: 4.6, sold: 678,
+    description: "Powerful stand mixer with 6-speed settings and 4.5L stainless steel bowl. Includes dough hook, flat beater, and wire whip.",
+    specs: { "Capacity": "4.5L", "Motor": "800W", "Speeds": "6 + Pulse", "Attachments": "3 included" },
+    reviews: [
+      { id: 27, author: "Maria C.", rating: 5, date: "2026-02-12", comment: "Makes baking so much easier. Solid build quality.", verified: true },
+    ],
+  },
+  { id: 26, name: "Electric Pressure Cooker 6L", price: 69.99, originalPrice: 109.99, image: "🍲", rating: 4.5, sold: 934,
+    description: "10-in-1 electric pressure cooker with 6L capacity. Pressure cook, slow cook, steam, sauté, and more with one-touch presets.",
+    specs: { "Capacity": "6L", "Functions": "10-in-1", "Power": "1000W", "Presets": "15 programs" },
+    reviews: [
+      { id: 28, author: "David R.", rating: 4, date: "2026-02-08", comment: "Cooks meals in half the time. Great for busy families.", verified: true },
+    ],
+  },
+  { id: 27, name: "Countertop Blender 1200W", price: 44.99, originalPrice: 79.99, image: "🥤", rating: 4.4, sold: 823,
+    description: "High-performance blender with 1200W motor and 1.5L BPA-free jar. Perfect for smoothies, soups, and sauces.",
+    specs: { "Power": "1200W", "Capacity": "1.5L", "Blades": "6 stainless steel", "Speeds": "5 + Pulse" },
+    reviews: [
+      { id: 29, author: "Tina W.", rating: 5, date: "2026-02-19", comment: "Blends frozen fruit effortlessly. Powerful!", verified: true },
+    ],
+  },
 ];
 
 export const getProductById = (id: number): Product | undefined =>
