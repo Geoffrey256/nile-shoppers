@@ -1,5 +1,6 @@
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { formatPrice } from "@/lib/currency";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -38,7 +39,7 @@ const CartDrawer = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground line-clamp-2 leading-tight">{item.name}</p>
-                      <p className="text-sm font-bold text-primary mt-1">${item.price.toFixed(2)}</p>
+                      <p className="text-sm font-bold text-primary mt-1">{formatPrice(item.price)}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -69,7 +70,7 @@ const CartDrawer = () => {
             <div className="border-t px-6 py-4 space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-medium">${totalPrice.toFixed(2)}</span>
+                <span className="font-medium">{formatPrice(totalPrice)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
@@ -78,10 +79,10 @@ const CartDrawer = () => {
               <Separator />
               <div className="flex justify-between text-base font-bold">
                 <span>Total</span>
-                <span className="text-primary">${totalPrice.toFixed(2)}</span>
+                <span className="text-primary">{formatPrice(totalPrice)}</span>
               </div>
               <Button className="w-full" size="lg">
-                Checkout (${totalPrice.toFixed(2)})
+                Checkout ({formatPrice(totalPrice)})
               </Button>
               <Button variant="outline" className="w-full" onClick={clearCart}>
                 Clear Cart

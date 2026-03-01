@@ -2,6 +2,7 @@ import { Star, Heart, ShoppingCart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { Link } from "react-router-dom";
 import type { Product } from "@/data/products";
+import { formatPrice } from "@/lib/currency";
 
 interface ProductCardProps {
   product: Product;
@@ -41,10 +42,10 @@ const ProductCard = ({ product, isFlashSale }: ProductCardProps) => {
           {product.name}
         </h3>
         <div className="flex items-baseline gap-1.5 mb-1">
-          <span className="text-base font-bold text-foreground">${product.price.toFixed(2)}</span>
+          <span className="text-base font-bold text-foreground">{formatPrice(product.price)}</span>
           {product.originalPrice && (
             <span className="text-xs text-muted-foreground line-through">
-              ${product.originalPrice.toFixed(2)}
+              {formatPrice(product.originalPrice)}
             </span>
           )}
         </div>

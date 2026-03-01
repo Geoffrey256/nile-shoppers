@@ -18,6 +18,11 @@ import Signup from "@/pages/Signup";
 import Wishlist from "@/pages/Wishlist";
 import Sell from "@/pages/Sell";
 import Help from "@/pages/Help";
+import AboutUs from "@/pages/AboutUs";
+import ReturnPolicy from "@/pages/ReturnPolicy";
+import Terms from "@/pages/Terms";
+import FAQs from "@/pages/FAQs";
+import TrackOrder from "@/pages/TrackOrder";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +47,11 @@ const App = () => (
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/sell" element={<Sell />} />
             <Route path="/help" element={<Help />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/return-policy" element={<ReturnPolicy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/faqs" element={<FAQs />} />
+            <Route path="/track-order" element={<TrackOrder />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

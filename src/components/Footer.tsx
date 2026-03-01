@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -17,22 +18,20 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-3 text-sm uppercase tracking-wider">Quick Links</h4>
             <ul className="space-y-2 text-sm opacity-80">
-              {["About Us", "Careers", "Return Policy", "Terms & Conditions"].map((link) => (
-                <li key={link}>
-                  <a href="#" className="hover:opacity-100 hover:underline">{link}</a>
-                </li>
-              ))}
+              <li><Link to="/about" className="hover:opacity-100 hover:underline">About Us</Link></li>
+              <li><Link to="/return-policy" className="hover:opacity-100 hover:underline">Return Policy</Link></li>
+              <li><Link to="/terms" className="hover:opacity-100 hover:underline">Terms & Conditions</Link></li>
+              <li><Link to="/faqs" className="hover:opacity-100 hover:underline">FAQs</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-3 text-sm uppercase tracking-wider">Customer Service</h4>
             <ul className="space-y-2 text-sm opacity-80">
-              {["Help Center", "Track Order", "Shipping Info", "FAQs"].map((link) => (
-                <li key={link}>
-                  <a href="#" className="hover:opacity-100 hover:underline">{link}</a>
-                </li>
-              ))}
+              <li><Link to="/help" className="hover:opacity-100 hover:underline">Help Center</Link></li>
+              <li><Link to="/track-order" className="hover:opacity-100 hover:underline">Track Order</Link></li>
+              <li><Link to="/faqs" className="hover:opacity-100 hover:underline">FAQs</Link></li>
+              <li><Link to="/sell" className="hover:opacity-100 hover:underline">Sell on Nile Shoppers</Link></li>
             </ul>
           </div>
 
@@ -40,8 +39,8 @@ const Footer = () => {
             <h4 className="font-semibold mb-3 text-sm uppercase tracking-wider">Contact Us</h4>
             <ul className="space-y-2 text-sm opacity-80">
               <li className="flex items-center gap-2"><Mail className="w-4 h-4" /> support@nileshoppers.com</li>
-              <li className="flex items-center gap-2"><Phone className="w-4 h-4" /> +1 (800) 123-4567</li>
-              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" /> Cairo, Egypt</li>
+              <li className="flex items-center gap-2"><Phone className="w-4 h-4" /> +256764593420</li>
+              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" /> Paidha, Zombo, Uganda</li>
             </ul>
           </div>
         </div>
@@ -51,8 +50,8 @@ const Footer = () => {
           <div className="flex gap-4 text-sm opacity-60">
             <span>💳 Visa</span>
             <span>💳 Mastercard</span>
-            <span>💳 PayPal</span>
-            <span>📱 Mobile Money</span>
+            <span>📱 MTN MoMo</span>
+            <span>📱 Airtel Money</span>
           </div>
         </div>
       </div>

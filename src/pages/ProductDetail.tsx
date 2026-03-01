@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { Star, Heart, ShoppingCart, Truck, Shield, ArrowLeft, Minus, Plus, CheckCircle } from "lucide-react";
+import { formatPrice } from "@/lib/currency";
 import { useState } from "react";
 import { getProductById, allProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
@@ -81,10 +82,10 @@ const ProductDetail = () => {
             {/* Price */}
             <div className="bg-secondary/50 rounded-lg p-4">
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-primary">${product.price.toFixed(2)}</span>
+                <span className="text-3xl font-bold text-primary">{formatPrice(product.price)}</span>
                 {product.originalPrice && (
                   <>
-                    <span className="text-lg text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+                    <span className="text-lg text-muted-foreground line-through">{formatPrice(product.originalPrice)}</span>
                     <span className="bg-sale text-sale-foreground text-sm font-bold px-2 py-0.5 rounded">-{discount}%</span>
                   </>
                 )}
@@ -125,7 +126,7 @@ const ProductDetail = () => {
             <div className="grid grid-cols-2 gap-3 pt-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Truck className="w-4 h-4 text-primary shrink-0" />
-                <span>Free delivery over $50</span>
+                <span>Free delivery over UGX 200,000</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Shield className="w-4 h-4 text-primary shrink-0" />
