@@ -24,7 +24,7 @@
     --muted: 210 15% 93%;
     --muted-foreground: 215 10% 45%;
 
-    --accent: 207 85% 55%;
+    --accent: 25 95% 53%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -52,7 +52,7 @@
     --sale-foreground: 0 0% 100%;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
-    --badge: 217 91% 45%;
+    --badge: 25 95% 50%;
     --badge-foreground: 0 0% 100%;
     --surface: 0 0% 100%;
     --surface-hover: 210 15% 97%;
@@ -71,7 +71,7 @@
     --secondary-foreground: 210 20% 95%;
     --muted: 215 20% 18%;
     --muted-foreground: 215 15% 60%;
-    --accent: 207 85% 60%;
+    --accent: 25 95% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 20% 95%;
@@ -92,7 +92,7 @@
     --sale-foreground: 0 0% 100%;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
-    --badge: 217 91% 50%;
+    --badge: 25 95% 55%;
     --badge-foreground: 0 0% 100%;
     --surface: 215 25% 14%;
     --surface-hover: 215 25% 18%;
