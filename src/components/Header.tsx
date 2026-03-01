@@ -1,10 +1,19 @@
 import { Search, ShoppingCart, User, Menu, Heart, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 
 const categories = [
-  "Phones & Tablets", "Electronics", "Fashion", "Home & Office",
-  "Health & Beauty", "Computing", "Baby Products", "Gaming",
+  { name: "Phones & Tablets", slug: "phones-tablets" },
+  { name: "Electronics", slug: "electronics" },
+  { name: "Fashion", slug: "fashion" },
+  { name: "Home & Office", slug: "home-office" },
+  { name: "Health & Beauty", slug: "health-beauty" },
+  { name: "Computing", slug: "computing" },
+  { name: "Baby Products", slug: "baby-products" },
+  { name: "Gaming", slug: "gaming" },
+  { name: "Aquariums", slug: "aquariums" },
+  { name: "Cooking Appliances", slug: "cooking-appliances" },
 ];
 
 const Header = () => {
@@ -31,9 +40,9 @@ const Header = () => {
             <Menu className="w-6 h-6" />
           </button>
 
-          <a href="/" className="font-black text-2xl tracking-tight shrink-0">
+          <Link to="/" className="font-black text-2xl tracking-tight shrink-0">
             NILE<span className="text-accent">SHOPPERS</span>
-          </a>
+          </Link>
 
           {/* Search */}
           <div className="hidden md:flex flex-1 max-w-2xl">
@@ -89,15 +98,15 @@ const Header = () => {
 
       {/* Category nav */}
       <nav className="bg-card border-b hidden lg:block">
-        <div className="container flex items-center gap-1 py-1">
+        <div className="container flex items-center gap-1 py-1 overflow-x-auto">
           {categories.map((cat) => (
-            <a
-              key={cat}
-              href="#"
+            <Link
+              key={cat.slug}
+              to={`/category/${cat.slug}`}
               className="px-3 py-2 text-sm text-foreground hover:text-primary hover:bg-secondary rounded-md transition-colors whitespace-nowrap"
             >
-              {cat}
-            </a>
+              {cat.name}
+            </Link>
           ))}
         </div>
       </nav>
@@ -107,9 +116,14 @@ const Header = () => {
         <div className="lg:hidden bg-card border-b animate-slide-in">
           <div className="container py-2 flex flex-col">
             {categories.map((cat) => (
-              <a key={cat} href="#" className="px-3 py-2.5 text-sm hover:bg-secondary rounded-md">
-                {cat}
-              </a>
+              <Link
+                key={cat.slug}
+                to={`/category/${cat.slug}`}
+                onClick={() => setMenuOpen(false)}
+                className="px-3 py-2.5 text-sm hover:bg-secondary rounded-md"
+              >
+                {cat.name}
+              </Link>
             ))}
           </div>
         </div>
