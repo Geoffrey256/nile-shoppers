@@ -1,20 +1,34 @@
 import { useState, useEffect } from "react";
-import heroBanner1 from "@/assets/hero-banner.png";
-import heroBanner2 from "@/assets/hero-banner-2.png";
+import heroElectronics from "@/assets/hero-electronics.png";
+import heroGaming from "@/assets/hero-gaming.png";
+import heroKitchen from "@/assets/hero-kitchen.png";
+import heroAquarium from "@/assets/hero-aquarium.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
-    image: heroBanner1,
+    image: heroElectronics,
     title: "Mega Sale is Live!",
-    subtitle: "Up to 70% off on Electronics & Fashion",
-    cta: "Shop Now",
+    subtitle: "Up to 70% off on Phones, Tablets & Laptops",
+    cta: "Shop Electronics",
   },
   {
-    image: heroBanner2,
-    title: "Flash Deals Every Day",
-    subtitle: "New deals drop every 24 hours",
-    cta: "See Deals",
+    image: heroGaming,
+    title: "Level Up Your Game",
+    subtitle: "Top gaming gear at unbeatable prices",
+    cta: "Shop Gaming",
+  },
+  {
+    image: heroKitchen,
+    title: "Kitchen Essentials",
+    subtitle: "Air fryers, blenders & more for your home",
+    cta: "Shop Appliances",
+  },
+  {
+    image: heroAquarium,
+    title: "Aquarium Paradise",
+    subtitle: "Everything for your underwater world",
+    cta: "Shop Aquariums",
   },
 ];
 
