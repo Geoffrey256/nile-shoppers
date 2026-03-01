@@ -1,7 +1,7 @@
 import { Truck, Shield, RotateCcw, Headphones } from "lucide-react";
 
 const features = [
-  { icon: Truck, title: "Free Delivery", desc: "On orders above $50" },
+  { icon: Truck, title: "Free Delivery", desc: "Around Kampala" },
   { icon: Shield, title: "Secure Payment", desc: "100% protected" },
   { icon: RotateCcw, title: "Easy Returns", desc: "7-day return policy" },
   { icon: Headphones, title: "24/7 Support", desc: "Dedicated help" },

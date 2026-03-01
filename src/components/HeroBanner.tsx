@@ -1,34 +1,63 @@
 import { useState, useEffect } from "react";
-import heroElectronics from "@/assets/hero-electronics.png";
-import heroGaming from "@/assets/hero-gaming.png";
-import heroKitchen from "@/assets/hero-kitchen.png";
-import heroAquarium from "@/assets/hero-aquarium.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const slides = [
   {
-    image: heroElectronics,
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1200&h=500&fit=crop&auto=format",
     title: "Mega Sale is Live!",
     subtitle: "Up to 70% off on Phones, Tablets & Laptops",
-    cta: "Shop Electronics",
+    cta: "Shop Phones & Tablets",
+    link: "/category/phones-tablets",
   },
   {
-    image: heroGaming,
+    image: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=1200&h=500&fit=crop&auto=format",
     title: "Level Up Your Game",
     subtitle: "Top gaming gear at unbeatable prices",
     cta: "Shop Gaming",
+    link: "/category/gaming",
   },
   {
-    image: heroKitchen,
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&h=500&fit=crop&auto=format",
     title: "Kitchen Essentials",
     subtitle: "Air fryers, blenders & more for your home",
-    cta: "Shop Appliances",
+    cta: "Shop Cooking Appliances",
+    link: "/category/cooking-appliances",
   },
   {
-    image: heroAquarium,
+    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&h=500&fit=crop&auto=format",
     title: "Aquarium Paradise",
     subtitle: "Everything for your underwater world",
     cta: "Shop Aquariums",
+    link: "/category/aquariums",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1200&h=500&fit=crop&auto=format",
+    title: "Fashion Forward",
+    subtitle: "Trendy styles at amazing prices",
+    cta: "Shop Fashion",
+    link: "/category/fashion",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1200&h=500&fit=crop&auto=format",
+    title: "Computing Power",
+    subtitle: "Laptops, desktops & accessories",
+    cta: "Shop Computing",
+    link: "/category/computing",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=1200&h=500&fit=crop&auto=format",
+    title: "Electronics Deals",
+    subtitle: "Smart TVs, speakers & gadgets on sale",
+    cta: "Shop Electronics",
+    link: "/category/electronics",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200&h=500&fit=crop&auto=format",
+    title: "Home & Office",
+    subtitle: "Upgrade your space with top picks",
+    cta: "Shop Home & Office",
+    link: "/category/home-office",
   },
 ];
 
@@ -54,15 +83,19 @@ const HeroBanner = () => {
               src={slide.image}
               alt={slide.title}
               className="w-full h-full object-cover"
+              loading={i === 0 ? "eager" : "lazy"}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 to-transparent flex items-center">
+            <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 to-transparent flex items-center">
               <div className="container">
                 <div className="max-w-md text-primary-foreground">
                   <h2 className="text-3xl md:text-5xl font-black mb-2">{slide.title}</h2>
                   <p className="text-lg md:text-xl mb-4 opacity-90">{slide.subtitle}</p>
-                  <button className="bg-accent text-accent-foreground font-bold px-8 py-3 rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wide">
+                  <Link
+                    to={slide.link}
+                    className="inline-block bg-accent text-accent-foreground font-bold px-8 py-3 rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wide"
+                  >
                     {slide.cta}
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

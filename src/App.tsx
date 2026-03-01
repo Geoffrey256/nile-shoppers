@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
 import CartDrawer from "@/components/CartDrawer";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -30,32 +31,33 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <CartProvider>
-        <Toaster />
-        <Sonner />
-        <CartDrawer />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/category/:slug" element={<CategoryPage />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/account/my" element={<MyAccount />} />
-            <Route path="/account/orders" element={<Orders />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/sell" element={<Sell />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/return-policy" element={<ReturnPolicy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/faqs" element={<FAQs />} />
-            <Route path="/track-order" element={<TrackOrder />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <WishlistProvider>
+          <Toaster />
+          <Sonner />
+          <CartDrawer />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/category/:slug" element={<CategoryPage />} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/account" element={<AccountPage />} />
+              <Route path="/account/my" element={<MyAccount />} />
+              <Route path="/account/orders" element={<Orders />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/sell" element={<Sell />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/return-policy" element={<ReturnPolicy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/faqs" element={<FAQs />} />
+              <Route path="/track-order" element={<TrackOrder />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </WishlistProvider>
       </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>

@@ -1,5 +1,6 @@
 import { Star, Heart, ShoppingCart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { Link } from "react-router-dom";
 import type { Product } from "@/data/products";
 import { formatPrice } from "@/lib/currency";
@@ -11,6 +12,8 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, isFlashSale }: ProductCardProps) => {
   const { addItem } = useCart();
+  const { isInWishlist, toggleItem } = useWishlist();
+  const inWishlist = isInWishlist(product.id);
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
@@ -18,16 +21,19 @@ const ProductCard = ({ product, isFlashSale }: ProductCardProps) => {
   return (
     <div className="bg-card rounded-lg border overflow-hidden group hover:shadow-lg transition-all duration-200 relative">
       {/* Image area */}
-      <Link to={`/product/${product.id}`} className="block relative aspect-square bg-secondary flex items-center justify-center text-5xl">
-        {product.image}
+      <Link to={`/product/${product.id}`} className="block relative aspect-square bg-secondary overflow-hidden">
+        <img src={product.image} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
         {discount > 0 && (
           <span className="absolute top-2 left-2 bg-sale text-sale-foreground text-xs font-bold px-2 py-0.5 rounded">
             -{discount}%
           </span>
         )}
       </Link>
-      <button className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-card/80 backdrop-blur-sm p-1.5 rounded-full hover:bg-card z-10">
-        <Heart className="w-4 h-4 text-muted-foreground hover:text-sale" />
+      <button
+        onClick={() => toggleItem(product)}
+        className={`absolute top-2 right-2 transition-opacity bg-card/80 backdrop-blur-sm p-1.5 rounded-full hover:bg-card z-10 ${inWishlist ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+      >
+        <Heart className={`w-4 h-4 ${inWishlist ? "text-sale fill-sale" : "text-muted-foreground hover:text-sale"}`} />
       </button>
       <button
         onClick={() => addItem({ id: product.id, name: product.name, price: product.price, image: product.image })}

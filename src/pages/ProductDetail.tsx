@@ -5,6 +5,7 @@ import { useState } from "react";
 import { getProductById, allProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(Number(id));
   const { addItem } = useCart();
+  const { isInWishlist, toggleItem } = useWishlist();
   const [quantity, setQuantity] = useState(1);
 
   if (!product) {
@@ -30,6 +32,7 @@ const ProductDetail = () => {
     );
   }
 
+  const inWishlist = isInWishlist(product.id);
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
@@ -48,29 +51,24 @@ const ProductDetail = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container py-4 md:py-8">
-        {/* Breadcrumb */}
         <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-4">
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
 
         <div className="grid md:grid-cols-2 gap-6 lg:gap-10">
           {/* Product Image */}
-          <div className="bg-card rounded-xl border p-8 flex items-center justify-center">
-            <div className="text-[8rem] md:text-[12rem] leading-none select-none">{product.image}</div>
+          <div className="bg-card rounded-xl border p-4 flex items-center justify-center overflow-hidden">
+            <img src={product.image} alt={product.name} className="w-full max-h-[400px] object-contain" />
           </div>
 
           {/* Product Info */}
           <div className="space-y-4">
             <h1 className="text-xl md:text-2xl font-bold text-foreground leading-tight">{product.name}</h1>
 
-            {/* Rating */}
             <div className="flex items-center gap-2">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${i < Math.floor(avgRating) ? "text-accent fill-accent" : "text-muted"}`}
-                  />
+                  <Star key={i} className={`w-4 h-4 ${i < Math.floor(avgRating) ? "text-accent fill-accent" : "text-muted"}`} />
                 ))}
               </div>
               <span className="text-sm font-medium text-foreground">{avgRating.toFixed(1)}</span>
@@ -79,7 +77,6 @@ const ProductDetail = () => {
               </span>
             </div>
 
-            {/* Price */}
             <div className="bg-secondary/50 rounded-lg p-4">
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-bold text-primary">{formatPrice(product.price)}</span>
@@ -93,40 +90,35 @@ const ProductDetail = () => {
             </div>
 
             <Separator />
-
-            {/* Description */}
             <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
 
-            {/* Quantity + Add to Cart */}
             <div className="flex items-center gap-4 pt-2">
               <div className="flex items-center border rounded-lg">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-3 py-2.5 hover:bg-secondary transition-colors"
-                >
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 py-2.5 hover:bg-secondary transition-colors">
                   <Minus className="w-4 h-4" />
                 </button>
                 <span className="px-4 py-2.5 font-medium text-sm border-x min-w-[3rem] text-center">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-3 py-2.5 hover:bg-secondary transition-colors"
-                >
+                <button onClick={() => setQuantity(quantity + 1)} className="px-3 py-2.5 hover:bg-secondary transition-colors">
                   <Plus className="w-4 h-4" />
                 </button>
               </div>
               <Button onClick={handleAddToCart} className="flex-1 gap-2" size="lg">
                 <ShoppingCart className="w-5 h-5" /> Add to Cart
               </Button>
-              <Button variant="outline" size="lg" className="px-3">
-                <Heart className="w-5 h-5" />
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-3"
+                onClick={() => toggleItem(product)}
+              >
+                <Heart className={`w-5 h-5 ${inWishlist ? "text-sale fill-sale" : ""}`} />
               </Button>
             </div>
 
-            {/* Trust badges */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Truck className="w-4 h-4 text-primary shrink-0" />
-                <span>Free delivery over UGX 200,000</span>
+                <span>Free delivery around Kampala</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Shield className="w-4 h-4 text-primary shrink-0" />
@@ -136,7 +128,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Tabs: Specs + Reviews */}
+        {/* Tabs */}
         <Tabs defaultValue="reviews" className="mt-8">
           <TabsList className="w-full justify-start">
             <TabsTrigger value="specs">Specifications</TabsTrigger>
@@ -176,10 +168,7 @@ const ProductDetail = () => {
                     </div>
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3.5 h-3.5 ${i < review.rating ? "text-accent fill-accent" : "text-muted"}`}
-                        />
+                        <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? "text-accent fill-accent" : "text-muted"}`} />
                       ))}
                     </div>
                     <p className="text-sm text-muted-foreground">{review.comment}</p>
@@ -193,7 +182,6 @@ const ProductDetail = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Related Products */}
         {(() => {
           const related = allProducts.filter(p => p.id !== product.id).slice(0, 6);
           return related.length > 0 ? (

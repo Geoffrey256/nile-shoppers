@@ -1,7 +1,7 @@
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { formatPrice } from "@/lib/currency";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -34,8 +34,8 @@ const CartDrawer = () => {
               <div className="space-y-4 py-4">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-3 items-start">
-                    <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center text-2xl shrink-0">
-                      {item.image}
+                    <div className="w-16 h-16 bg-secondary rounded-lg overflow-hidden shrink-0">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground line-clamp-2 leading-tight">{item.name}</p>

@@ -1,7 +1,8 @@
 import { Search, ShoppingCart, User, Menu, Heart, ChevronDown, Package, LogIn } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +28,9 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { totalItems, setIsOpen } = useCart();
+  const { items: wishlistItems } = useWishlist();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +44,7 @@ const Header = () => {
       {/* Top bar */}
       <div className="bg-primary-darker text-primary-foreground text-xs py-1.5">
         <div className="container flex justify-between items-center">
-          <span>Free delivery on orders above $50 | Download the app</span>
+          <span>Deliveries around Kampala are free</span>
           <div className="hidden md:flex gap-4">
             <Link to="/sell" className="cursor-pointer hover:underline">
               Sell on Nile Shoppers
@@ -111,10 +114,15 @@ const Header = () => {
             </DropdownMenu>
             <Link
               to="/wishlist"
-              className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm"
+              className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm relative"
             >
               <Heart className="w-5 h-5" />
               <span>Wishlist</span>
+              {wishlistItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {wishlistItems.length}
+                </span>
+              )}
             </Link>
             <button className="relative flex items-center gap-1.5 hover:opacity-80 text-sm" onClick={() => setIsOpen(true)}>
               <ShoppingCart className="w-5 h-5" />
@@ -147,15 +155,23 @@ const Header = () => {
       {/* Category nav */}
       <nav className="bg-card border-b hidden lg:block">
         <div className="container flex items-center gap-1 py-1 overflow-x-auto">
-          {categories.map((cat) => (
-            <Link
-              key={cat.slug}
-              to={`/category/${cat.slug}`}
-              className="px-3 py-2 text-sm text-foreground hover:text-primary hover:bg-secondary rounded-md transition-colors whitespace-nowrap"
-            >
-              {cat.name}
-            </Link>
-          ))}
+          {categories.map((cat) => {
+            const path = `/category/${cat.slug}`;
+            const isActive = location.pathname === path;
+            return (
+              <Link
+                key={cat.slug}
+                to={path}
+                className={`px-3 py-2 text-sm rounded-md transition-colors whitespace-nowrap ${
+                  isActive
+                    ? "bg-primary text-primary-foreground font-semibold"
+                    : "text-foreground hover:text-primary hover:bg-secondary"
+                }`}
+              >
+                {cat.name}
+              </Link>
+            );
+          })}
         </div>
       </nav>
 
@@ -163,16 +179,22 @@ const Header = () => {
       {menuOpen && (
         <div className="lg:hidden bg-card border-b animate-slide-in">
           <div className="container py-2 flex flex-col">
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                to={`/category/${cat.slug}`}
-                onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm hover:bg-secondary rounded-md"
-              >
-                {cat.name}
-              </Link>
-            ))}
+            {categories.map((cat) => {
+              const path = `/category/${cat.slug}`;
+              const isActive = location.pathname === path;
+              return (
+                <Link
+                  key={cat.slug}
+                  to={path}
+                  onClick={() => setMenuOpen(false)}
+                  className={`px-3 py-2.5 text-sm rounded-md ${
+                    isActive ? "bg-primary text-primary-foreground font-semibold" : "hover:bg-secondary"
+                  }`}
+                >
+                  {cat.name}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

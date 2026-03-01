@@ -45,14 +45,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-primary-foreground/20 mt-8 pt-6 text-center">
           <p className="text-sm opacity-60">© 2026 Nile Shoppers. All rights reserved.</p>
-          <div className="flex gap-4 text-sm opacity-60">
-            <span>💳 Visa</span>
-            <span>💳 Mastercard</span>
-            <span>📱 MTN MoMo</span>
-            <span>📱 Airtel Money</span>
-          </div>
         </div>
       </div>
     </footer>
