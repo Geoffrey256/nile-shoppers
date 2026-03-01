@@ -36,8 +36,12 @@ const Header = () => {
         <div className="container flex justify-between items-center">
           <span>Free delivery on orders above $50 | Download the app</span>
           <div className="hidden md:flex gap-4">
-            <span className="cursor-pointer hover:underline">Sell on Nile Shoppers</span>
-            <span className="cursor-pointer hover:underline">Help</span>
+            <Link to="/sell" className="cursor-pointer hover:underline">
+              Sell on Nile Shoppers
+            </Link>
+            <Link to="/help" className="cursor-pointer hover:underline">
+              Help
+            </Link>
           </div>
         </div>
       </div>
@@ -70,15 +74,21 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-3 ml-auto">
-            <button className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm">
+            <Link
+              to="/account"
+              className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm"
+            >
               <User className="w-5 h-5" />
               <span>Account</span>
               <ChevronDown className="w-3 h-3" />
-            </button>
-            <button className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm">
+            </Link>
+            <Link
+              to="/wishlist"
+              className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm"
+            >
               <Heart className="w-5 h-5" />
               <span>Wishlist</span>
-            </button>
+            </Link>
             <button className="relative flex items-center gap-1.5 hover:opacity-80 text-sm" onClick={() => setIsOpen(true)}>
               <ShoppingCart className="w-5 h-5" />
               <span className="hidden md:inline">Cart</span>
