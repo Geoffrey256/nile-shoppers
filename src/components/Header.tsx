@@ -1,6 +1,6 @@
 import { Search, ShoppingCart, User, Menu, Heart, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 
 const categories = [
@@ -18,7 +18,16 @@ const categories = [
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { totalItems, setIsOpen } = useCart();
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50">
@@ -44,19 +53,20 @@ const Header = () => {
             NILE<span className="text-accent">SHOPPERS</span>
           </Link>
 
-          {/* Search */}
-          <div className="hidden md:flex flex-1 max-w-2xl">
+          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-2xl">
             <div className="flex w-full rounded-lg overflow-hidden">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products, brands and categories"
                 className="flex-1 px-4 py-2.5 text-foreground text-sm outline-none"
               />
-              <button className="bg-accent px-5 hover:opacity-90 transition-opacity">
+              <button type="submit" className="bg-accent px-5 hover:opacity-90 transition-opacity">
                 <Search className="w-5 h-5 text-accent-foreground" />
               </button>
             </div>
-          </div>
+          </form>
 
           {/* Actions */}
           <div className="flex items-center gap-3 ml-auto">
@@ -81,19 +91,20 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile search */}
-        <div className="md:hidden container mt-2">
+        <form onSubmit={handleSearch} className="md:hidden container mt-2">
           <div className="flex rounded-lg overflow-hidden">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..."
               className="flex-1 px-4 py-2 text-foreground text-sm outline-none"
             />
-            <button className="bg-accent px-4">
+            <button type="submit" className="bg-accent px-4">
               <Search className="w-4 h-4 text-accent-foreground" />
             </button>
           </div>
-        </div>
+        </form>
       </div>
 
       {/* Category nav */}
