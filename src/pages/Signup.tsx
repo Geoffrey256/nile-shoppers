@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import authBg from "@/assets/auth-bg.png";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -10,15 +11,17 @@ const Signup = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: send to server
     console.log("signing up:", { name, email, password, confirm });
     navigate("/account/my");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary-darker">
-      <div className="w-full max-w-md bg-card p-8 rounded-lg shadow">
-        <h2 className="text-2xl font-bold mb-6 text-primary-foreground">
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${authBg})` }}
+    >
+      <div className="w-full max-w-md bg-card/95 backdrop-blur-sm p-8 rounded-lg shadow-xl">
+        <h2 className="text-2xl font-bold mb-6 text-foreground">
           Create an account
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -31,7 +34,7 @@ const Signup = () => {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-[hsl(210,80%,55%)]"
             />
           </div>
 
@@ -44,7 +47,7 @@ const Signup = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-[hsl(210,80%,55%)]"
             />
           </div>
 
@@ -57,7 +60,7 @@ const Signup = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-[hsl(210,80%,55%)]"
             />
           </div>
 
@@ -70,13 +73,13 @@ const Signup = () => {
               required
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-[hsl(210,80%,55%)]"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-accent text-accent-foreground py-2 rounded hover:opacity-90 transition"
+            className="w-full bg-[hsl(210,80%,55%)] text-white py-2 rounded font-semibold hover:bg-[hsl(210,80%,45%)] transition"
           >
             Sign up
           </button>
@@ -84,7 +87,7 @@ const Signup = () => {
 
         <p className="text-sm text-foreground mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-accent hover:underline">
+          <Link to="/login" className="text-[hsl(210,80%,55%)] hover:underline font-medium">
             Log in
           </Link>
         </p>
