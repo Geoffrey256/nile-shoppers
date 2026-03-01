@@ -1,7 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { Star, Heart, ShoppingCart, Truck, Shield, ArrowLeft, Minus, Plus, CheckCircle } from "lucide-react";
 import { useState } from "react";
-import { getProductById } from "@/data/products";
+import { getProductById, allProducts } from "@/data/products";
+import ProductCard from "@/components/ProductCard";
 import { useCart } from "@/contexts/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -190,6 +191,21 @@ const ProductDetail = () => {
             )}
           </TabsContent>
         </Tabs>
+
+        {/* Related Products */}
+        {(() => {
+          const related = allProducts.filter(p => p.id !== product.id).slice(0, 6);
+          return related.length > 0 ? (
+            <section className="mt-10">
+              <h2 className="text-xl font-bold text-foreground mb-4">You May Also Like</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                {related.map(p => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            </section>
+          ) : null;
+        })()}
       </main>
       <Footer />
     </div>
