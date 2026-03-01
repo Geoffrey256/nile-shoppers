@@ -1,7 +1,14 @@
-import { Search, ShoppingCart, User, Menu, Heart, ChevronDown } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, Heart, ChevronDown, Package, LogIn } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const categories = [
   { name: "Phones & Tablets", slug: "phones-tablets" },
@@ -74,14 +81,34 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-3 ml-auto">
-            <Link
-              to="/account"
-              className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm"
-            >
-              <User className="w-5 h-5" />
-              <span>Account</span>
-              <ChevronDown className="w-3 h-3" />
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm outline-none">
+                <User className="w-5 h-5" />
+                <span>Account</span>
+                <ChevronDown className="w-3 h-3" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link to="/account/my" className="flex items-center gap-2 cursor-pointer">
+                    <User className="w-4 h-4" />
+                    My Account
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/account/orders" className="flex items-center gap-2 cursor-pointer">
+                    <Package className="w-4 h-4" />
+                    Orders
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/login" className="flex items-center gap-2 cursor-pointer">
+                    <LogIn className="w-4 h-4" />
+                    Sign In
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Link
               to="/wishlist"
               className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm"
