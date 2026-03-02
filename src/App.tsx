@@ -24,6 +24,7 @@ import ReturnPolicy from "@/pages/ReturnPolicy";
 import Terms from "@/pages/Terms";
 import FAQs from "@/pages/FAQs";
 import TrackOrder from "@/pages/TrackOrder";
+import Checkout from "@/pages/Checkout";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/terms" element={<Terms />} />
               <Route path="/faqs" element={<FAQs />} />
               <Route path="/track-order" element={<TrackOrder />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
