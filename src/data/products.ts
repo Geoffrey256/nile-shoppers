@@ -46,7 +46,7 @@ export const allProducts: Product[] = [
       { id: 6, author: "Alex P.", rating: 5, date: "2026-02-20", comment: "Unbelievable sound for such a small speaker!", verified: true },
     ],
   },
-  { id: 4, name: "USB-C Fast Charger 65W", price: 55000, originalPrice: 148000, image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&h=400&fit=crop&auto=format", rating: 4.6, sold: 312,
+  { id: 4, name: "USB-C Fast Charger 65W", price: 55000, originalPrice: 148000, image: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&h=400&fit=crop&auto=format", rating: 4.6, sold: 312,
     description: "GaN technology delivers 65W of power in an ultra-compact design. Charges laptops, phones, and tablets simultaneously.",
     specs: { "Output": "65W PD 3.0", "Ports": "2x USB-C, 1x USB-A", "Technology": "GaN III" },
     reviews: [
@@ -138,7 +138,7 @@ export const allProducts: Product[] = [
     ],
   },
   // Aquarium products
-  { id: 20, name: "LED Aquarium Light Bar 36\"", price: 129000, originalPrice: 222000, image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=400&fit=crop&auto=format", rating: 4.5, sold: 312,
+  { id: 20, name: "LED Aquarium Light Bar 36\"", price: 129000, originalPrice: 222000, image: "https://images.unsplash.com/photo-1584267385494-9fdd9a71ad75?w=400&h=400&fit=crop&auto=format", rating: 4.5, sold: 312,
     description: "Full-spectrum LED light bar designed for freshwater and saltwater aquariums. Promotes healthy plant and coral growth.",
     specs: { "Length": "36 inches", "LED Type": "Full Spectrum RGB+W", "Wattage": "24W", "Waterproof": "IP67" },
     reviews: [
@@ -152,20 +152,20 @@ export const allProducts: Product[] = [
       { id: 23, author: "Derek H.", rating: 4, date: "2026-02-10", comment: "Very quiet and keeps the water crystal clear.", verified: true },
     ],
   },
-  { id: 22, name: "Automatic Fish Feeder Digital", price: 74000, originalPrice: 129000, image: "https://images.unsplash.com/photo-1520990497388-d07eb1d36e7c?w=400&h=400&fit=crop&auto=format", rating: 4.3, sold: 445,
+  { id: 22, name: "Automatic Fish Feeder Digital", price: 74000, originalPrice: 129000, image: "https://images.unsplash.com/photo-1520301255226-bf5f144451c1?w=400&h=400&fit=crop&auto=format", rating: 4.3, sold: 445,
     description: "Programmable automatic fish feeder with LCD display. Set up to 4 feeding times per day with adjustable portion sizes.",
     specs: { "Feedings": "1-4 per day", "Capacity": "200ml", "Power": "2x AA batteries", "Display": "LCD" },
     reviews: [
       { id: 24, author: "Sophie L.", rating: 5, date: "2026-01-29", comment: "Perfect for when I travel. My fish are always fed on time!", verified: true },
     ],
   },
-  { id: 23, name: "Aquarium Heater 300W Submersible", price: 85000, originalPrice: 148000, image: "https://images.unsplash.com/photo-1571752726703-5e7d1f6a986d?w=400&h=400&fit=crop&auto=format", rating: 4.4, sold: 276,
+  { id: 23, name: "Aquarium Heater 300W Submersible", price: 85000, originalPrice: 148000, image: "https://images.unsplash.com/photo-1559827291-bae8b878cd33?w=400&h=400&fit=crop&auto=format", rating: 4.4, sold: 276,
     description: "Fully submersible aquarium heater with precise thermostat control. Shatterproof quartz glass construction.",
     specs: { "Power": "300W", "Range": "18-34°C", "Tank Size": "Up to 300L", "Material": "Quartz glass" },
     reviews: [],
   },
   // Cooking appliances
-  { id: 24, name: "Digital Air Fryer 5.5L", price: 222000, originalPrice: 370000, image: "https://images.unsplash.com/photo-1648455462849-3e1a41638c9e?w=400&h=400&fit=crop&auto=format", rating: 4.7, sold: 1567,
+  { id: 24, name: "Digital Air Fryer 5.5L", price: 222000, originalPrice: 370000, image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400&h=400&fit=crop&auto=format", rating: 4.7, sold: 1567,
     description: "Large capacity digital air fryer with 8 preset cooking programs. Cook crispy food with up to 85% less oil.",
     specs: { "Capacity": "5.5L", "Power": "1700W", "Programs": "8 presets", "Temperature": "80-200°C" },
     reviews: [

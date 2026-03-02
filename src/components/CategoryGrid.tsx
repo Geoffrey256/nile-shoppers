@@ -1,4 +1,4 @@
-import { Smartphone, Monitor, Shirt, Home, Heart, Laptop, Baby, Gamepad2, Fish, CookingPot } from "lucide-react";
+import { Smartphone, Monitor, Shirt, Home, Heart, Laptop, Baby, Gamepad2, Fish, CookingPot, Hotel } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const categories = [
@@ -12,6 +12,7 @@ const categories = [
   { name: "Gaming", slug: "gaming", icon: Gamepad2, color: "bg-success/10 text-success" },
   { name: "Aquariums", slug: "aquariums", icon: Fish, color: "bg-accent/10 text-accent" },
   { name: "Cooking Appliances", slug: "cooking-appliances", icon: CookingPot, color: "bg-primary/10 text-primary" },
+  { name: "Stays", slug: "stays", icon: Hotel, color: "bg-success/10 text-success" },
 ];
 
 const CategoryGrid = () => {

@@ -22,6 +22,7 @@ const categories = [
   { name: "Gaming", slug: "gaming" },
   { name: "Aquariums", slug: "aquariums" },
   { name: "Cooking Appliances", slug: "cooking-appliances" },
+  { name: "Stays", slug: "stays" },
 ];
 
 const Header = () => {
