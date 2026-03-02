@@ -25,6 +25,8 @@ import Terms from "@/pages/Terms";
 import FAQs from "@/pages/FAQs";
 import TrackOrder from "@/pages/TrackOrder";
 import Checkout from "@/pages/Checkout";
+import HotelListing from "@/pages/HotelListing";
+import HotelDetail from "@/pages/HotelDetail";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +58,8 @@ const App = () => (
               <Route path="/faqs" element={<FAQs />} />
               <Route path="/track-order" element={<TrackOrder />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/category/stays" element={<HotelListing />} />
+              <Route path="/stays/:id" element={<HotelDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

@@ -4,35 +4,35 @@ import { Link } from "react-router-dom";
 
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1200&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1556656793-08538906a9f8?w=1200&h=500&fit=crop&auto=format",
     title: "Mega Sale is Live!",
     subtitle: "Up to 70% off on Phones, Tablets & Laptops",
     cta: "Shop Phones & Tablets",
     link: "/category/phones-tablets",
   },
   {
-    image: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=1200&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=1200&h=500&fit=crop&auto=format",
     title: "Level Up Your Game",
     subtitle: "Top gaming gear at unbeatable prices",
     cta: "Shop Gaming",
     link: "/category/gaming",
   },
   {
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1556909114-44e3e70034e2?w=1200&h=500&fit=crop&auto=format",
     title: "Kitchen Essentials",
     subtitle: "Air fryers, blenders & more for your home",
     cta: "Shop Cooking Appliances",
     link: "/category/cooking-appliances",
   },
   {
-    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=1200&h=500&fit=crop&auto=format",
     title: "Aquarium Paradise",
     subtitle: "Everything for your underwater world",
     cta: "Shop Aquariums",
     link: "/category/aquariums",
   },
   {
-    image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1200&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1200&h=500&fit=crop&auto=format",
     title: "Fashion Forward",
     subtitle: "Trendy styles at amazing prices",
     cta: "Shop Fashion",
@@ -46,14 +46,14 @@ const slides = [
     link: "/category/computing",
   },
   {
-    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=1200&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1200&h=500&fit=crop&auto=format",
     title: "Electronics Deals",
     subtitle: "Smart TVs, speakers & gadgets on sale",
     cta: "Shop Electronics",
     link: "/category/electronics",
   },
   {
-    image: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&h=500&fit=crop&auto=format",
     title: "Home & Office",
     subtitle: "Upgrade your space with top picks",
     cta: "Shop Home & Office",
