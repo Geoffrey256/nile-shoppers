@@ -14,6 +14,7 @@ import SearchResults from "./pages/SearchResults";
 import AccountPage from "@/pages/Account";
 import MyAccount from "@/pages/MyAccount";
 import Orders from "@/pages/Orders";
+import Notifications from "@/pages/Notifications";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Wishlist from "@/pages/Wishlist";
@@ -27,6 +28,8 @@ import TrackOrder from "@/pages/TrackOrder";
 import Checkout from "@/pages/Checkout";
 import HotelListing from "@/pages/HotelListing";
 import HotelDetail from "@/pages/HotelDetail";
+import RoomDetail from "@/pages/RoomDetail";
+import BookRoom from "@/pages/BookRoom";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +50,7 @@ const App = () => (
               <Route path="/account" element={<AccountPage />} />
               <Route path="/account/my" element={<MyAccount />} />
               <Route path="/account/orders" element={<Orders />} />
+              <Route path="/account/notifications" element={<Notifications />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/wishlist" element={<Wishlist />} />
@@ -60,6 +64,8 @@ const App = () => (
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/category/hotel-booking" element={<HotelListing />} />
               <Route path="/hotel-booking/:id" element={<HotelDetail />} />
+              <Route path="/hotel-booking/:hotelId/room/:tier" element={<RoomDetail />} />
+              <Route path="/hotel-booking/:hotelId/book/:tier" element={<BookRoom />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

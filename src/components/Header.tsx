@@ -1,4 +1,4 @@
-import { Search, ShoppingCart, User, Menu, Heart, ChevronDown, Package, LogIn } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, Heart, ChevronDown, Package, LogIn, Bell } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
@@ -100,6 +100,12 @@ const Header = () => {
                   <Link to="/account/orders" className="flex items-center gap-2 cursor-pointer">
                     <Package className="w-4 h-4" />
                     Orders
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/account/notifications" className="flex items-center gap-2 cursor-pointer">
+                    <Bell className="w-4 h-4" />
+                    Notifications
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
