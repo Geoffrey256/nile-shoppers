@@ -11,9 +11,7 @@ const categoryProductMap: Record<string, number[]> = {
   "fashion": [12, 19],
   "home-office": [5, 6, 15],
   "health-beauty": [],
-  "computing": [14],
-  "baby-products": [],
-  "gaming": [17],
+  "computing": [14, 17],
   "aquariums": [20, 21, 22, 23],
   "cooking-appliances": [24, 25, 26, 27],
 };
@@ -24,9 +22,7 @@ const categoryNames: Record<string, string> = {
   "fashion": "Fashion",
   "home-office": "Home & Office",
   "health-beauty": "Health & Beauty",
-  "computing": "Computing",
-  "baby-products": "Baby Products",
-  "gaming": "Gaming",
+  "computing": "Computing & Gaming",
   "aquariums": "Aquariums",
   "cooking-appliances": "Cooking Appliances",
 };

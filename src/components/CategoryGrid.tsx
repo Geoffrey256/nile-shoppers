@@ -1,4 +1,4 @@
-import { Smartphone, Monitor, Shirt, Home, Heart, Laptop, Baby, Gamepad2, Fish, CookingPot, Hotel } from "lucide-react";
+import { Smartphone, Monitor, Shirt, Home, Heart, Laptop, Fish, CookingPot, Hotel } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const categories = [
@@ -8,11 +8,9 @@ const categories = [
   { name: "Home & Office", slug: "home-office", icon: Home, color: "bg-success/10 text-success" },
   { name: "Health & Beauty", slug: "health-beauty", icon: Heart, color: "bg-primary/10 text-primary" },
   { name: "Computing", slug: "computing", icon: Laptop, color: "bg-accent/10 text-accent" },
-  { name: "Baby Products", slug: "baby-products", icon: Baby, color: "bg-primary/10 text-primary" },
-  { name: "Gaming", slug: "gaming", icon: Gamepad2, color: "bg-success/10 text-success" },
   { name: "Aquariums", slug: "aquariums", icon: Fish, color: "bg-accent/10 text-accent" },
   { name: "Cooking Appliances", slug: "cooking-appliances", icon: CookingPot, color: "bg-primary/10 text-primary" },
-  { name: "Stays", slug: "stays", icon: Hotel, color: "bg-success/10 text-success" },
+  { name: "Hotel Booking", slug: "hotel-booking", icon: Hotel, color: "bg-success/10 text-success" },
 ];
 
 const CategoryGrid = () => {

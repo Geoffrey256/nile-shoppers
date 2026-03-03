@@ -15,8 +15,8 @@ const HotelListing = () => {
         </Link>
 
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground">Find Your Stay</h1>
-          <p className="text-muted-foreground mt-1">Browse guest houses and hotels near you</p>
+          <h1 className="text-2xl font-bold text-foreground">Hotel Booking</h1>
+          <p className="text-muted-foreground mt-1">Browse and book guest houses and hotels near you</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -25,7 +25,7 @@ const HotelListing = () => {
             return (
               <Link
                 key={hotel.id}
-                to={`/stays/${hotel.id}`}
+                to={`/hotel-booking/${hotel.id}`}
                 className="bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-shadow group"
               >
                 <div className="aspect-[3/2] overflow-hidden">
