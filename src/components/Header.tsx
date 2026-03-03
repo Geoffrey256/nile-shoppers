@@ -18,11 +18,9 @@ const categories = [
   { name: "Home & Office", slug: "home-office" },
   { name: "Health & Beauty", slug: "health-beauty" },
   { name: "Computing", slug: "computing" },
-  { name: "Baby Products", slug: "baby-products" },
-  { name: "Gaming", slug: "gaming" },
   { name: "Aquariums", slug: "aquariums" },
   { name: "Cooking Appliances", slug: "cooking-appliances" },
-  { name: "Stays", slug: "stays" },
+  { name: "Hotel Booking", slug: "hotel-booking" },
 ];
 
 const Header = () => {
@@ -48,7 +46,7 @@ const Header = () => {
           <span>Deliveries around Kampala are free</span>
           <div className="hidden md:flex gap-4">
             <Link to="/sell" className="cursor-pointer hover:underline">
-              Sell on Nile Shoppers
+              Sell on Nile Shoppers Marketplace
             </Link>
             <Link to="/help" className="cursor-pointer hover:underline">
               Help

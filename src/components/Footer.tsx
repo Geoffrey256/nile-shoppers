@@ -11,7 +11,7 @@ const Footer = () => {
               NILE<span className="text-accent">SHOPPERS</span>
             </h3>
             <p className="text-sm opacity-80 leading-relaxed">
-              Your one-stop shop for the best deals on electronics, fashion, home & more.
+              Your one-stop online marketplace for the best deals on electronics, fashion, home & more.
             </p>
           </div>
 

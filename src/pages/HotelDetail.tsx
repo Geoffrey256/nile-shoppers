@@ -27,7 +27,7 @@ const HotelDetail = () => {
         <Header />
         <main className="container py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground">Hotel not found</h1>
-          <Link to="/category/stays" className="text-primary hover:underline mt-4 inline-block">Browse all stays</Link>
+          <Link to="/category/hotel-booking" className="text-primary hover:underline mt-4 inline-block">Browse all hotels</Link>
         </main>
         <Footer />
       </div>
@@ -56,8 +56,8 @@ const HotelDetail = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container py-4 md:py-8">
-        <Link to="/category/stays" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-4">
-          <ArrowLeft className="w-4 h-4" /> Back to Stays
+        <Link to="/category/hotel-booking" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-4">
+          <ArrowLeft className="w-4 h-4" /> Back to Hotel Booking
         </Link>
 
         {/* Hotel header */}
@@ -77,7 +77,7 @@ const HotelDetail = () => {
             </div>
             <p className="text-muted-foreground mt-4 leading-relaxed">{hotel.description}</p>
 
-            {/* Google Maps embed */}
+            {/* OpenStreetMap embed */}
             <div className="mt-4 rounded-lg overflow-hidden border">
               <iframe
                 title={`Map of ${hotel.name}`}
@@ -85,8 +85,7 @@ const HotelDetail = () => {
                 height="200"
                 style={{ border: 0 }}
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                src={`https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d5000!2d${hotel.lng}!3d${hotel.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sug!4v1`}
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${hotel.lng - 0.01}%2C${hotel.lat - 0.01}%2C${hotel.lng + 0.01}%2C${hotel.lat + 0.01}&layer=mapnik&marker=${hotel.lat}%2C${hotel.lng}`}
               />
             </div>
           </div>
