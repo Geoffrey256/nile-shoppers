@@ -35,10 +35,10 @@ const App = () => (
     <TooltipProvider>
       <CartProvider>
         <WishlistProvider>
-          <Toaster />
-          <Sonner />
-          <CartDrawer />
           <BrowserRouter>
+            <Toaster />
+            <Sonner />
+            <CartDrawer />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/product/:id" element={<ProductDetail />} />
