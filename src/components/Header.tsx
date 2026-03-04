@@ -1,8 +1,9 @@
-import { Search, ShoppingCart, User, Menu, Heart, ChevronDown, Package, LogIn, Bell } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, Heart, ChevronDown, Package, LogIn, Bell, LogOut, Shield } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +29,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { totalItems, setIsOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
+  const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,31 +40,34 @@ const Header = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login");
+  };
+
   return (
     <header className="sticky top-0 z-50">
       {/* Top bar */}
       <div className="bg-primary-darker text-primary-foreground text-xs py-1.5">
         <div className="container flex justify-between items-center">
-          <span>Deliveries around Kampala are free</span>
+          <span className="truncate">Deliveries around Kampala are free</span>
           <div className="hidden md:flex gap-4">
             <Link to="/sell" className="cursor-pointer hover:underline">
               Sell on Nile Shoppers Marketplace
             </Link>
-            <Link to="/help" className="cursor-pointer hover:underline">
-              Help
-            </Link>
+            <Link to="/help" className="cursor-pointer hover:underline">Help</Link>
           </div>
         </div>
       </div>
 
       {/* Main header */}
       <div className="bg-primary text-primary-foreground py-3">
-        <div className="container flex items-center gap-4">
-          <button onClick={() => setMenuOpen(!menuOpen)} className="lg:hidden">
+        <div className="container flex items-center gap-2 sm:gap-4">
+          <button onClick={() => setMenuOpen(!menuOpen)} className="lg:hidden shrink-0">
             <Menu className="w-6 h-6" />
           </button>
 
-          <Link to="/" className="font-black text-2xl tracking-tight shrink-0">
+          <Link to="/" className="font-black text-xl sm:text-2xl tracking-tight shrink-0">
             NILE<span className="text-accent">SHOPPERS</span>
           </Link>
 
@@ -82,47 +87,71 @@ const Header = () => {
           </form>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
             <DropdownMenu>
               <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm outline-none">
                 <User className="w-5 h-5" />
-                <span>Account</span>
+                <span className="hidden lg:inline">{user ? "Account" : "Sign In"}</span>
                 <ChevronDown className="w-3 h-3" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem asChild>
-                  <Link to="/account/my" className="flex items-center gap-2 cursor-pointer">
-                    <User className="w-4 h-4" />
-                    My Account
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/account/orders" className="flex items-center gap-2 cursor-pointer">
-                    <Package className="w-4 h-4" />
-                    Orders
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/account/notifications" className="flex items-center gap-2 cursor-pointer">
-                    <Bell className="w-4 h-4" />
-                    Notifications
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/login" className="flex items-center gap-2 cursor-pointer">
-                    <LogIn className="w-4 h-4" />
-                    Sign In
-                  </Link>
-                </DropdownMenuItem>
+                {user ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/account/my" className="flex items-center gap-2 cursor-pointer">
+                        <User className="w-4 h-4" /> My Account
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/account/orders" className="flex items-center gap-2 cursor-pointer">
+                        <Package className="w-4 h-4" /> Orders
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/account/notifications" className="flex items-center gap-2 cursor-pointer">
+                        <Bell className="w-4 h-4" /> Notifications
+                      </Link>
+                    </DropdownMenuItem>
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/admin" className="flex items-center gap-2 cursor-pointer text-primary">
+                            <Shield className="w-4 h-4" /> Admin Panel
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut} className="flex items-center gap-2 cursor-pointer text-destructive">
+                      <LogOut className="w-4 h-4" /> Sign Out
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/login" className="flex items-center gap-2 cursor-pointer">
+                        <LogIn className="w-4 h-4" /> Sign In
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/signup" className="flex items-center gap-2 cursor-pointer">
+                        <User className="w-4 h-4" /> Create Account
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Link
-              to="/wishlist"
-              className="hidden md:flex items-center gap-1.5 hover:opacity-80 text-sm relative"
-            >
+
+            {/* Mobile account link */}
+            <Link to={user ? "/account/my" : "/login"} className="md:hidden">
+              <User className="w-5 h-5" />
+            </Link>
+
+            <Link to="/wishlist" className="hidden sm:flex items-center gap-1.5 hover:opacity-80 text-sm relative">
               <Heart className="w-5 h-5" />
-              <span>Wishlist</span>
+              <span className="hidden lg:inline">Wishlist</span>
               {wishlistItems.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {wishlistItems.length}
@@ -131,7 +160,7 @@ const Header = () => {
             </Link>
             <button className="relative flex items-center gap-1.5 hover:opacity-80 text-sm" onClick={() => setIsOpen(true)}>
               <ShoppingCart className="w-5 h-5" />
-              <span className="hidden md:inline">Cart</span>
+              <span className="hidden lg:inline">Cart</span>
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {totalItems}
@@ -200,6 +229,18 @@ const Header = () => {
                 </Link>
               );
             })}
+            <div className="border-t my-2" />
+            <Link to="/wishlist" onClick={() => setMenuOpen(false)} className="px-3 py-2.5 text-sm hover:bg-secondary flex items-center gap-2">
+              <Heart className="w-4 h-4" /> Wishlist
+            </Link>
+            <Link to="/account/notifications" onClick={() => setMenuOpen(false)} className="px-3 py-2.5 text-sm hover:bg-secondary flex items-center gap-2">
+              <Bell className="w-4 h-4" /> Notifications
+            </Link>
+            {isAdmin && (
+              <Link to="/admin" onClick={() => setMenuOpen(false)} className="px-3 py-2.5 text-sm hover:bg-secondary flex items-center gap-2 text-primary font-medium">
+                <Shield className="w-4 h-4" /> Admin Panel
+              </Link>
+            )}
           </div>
         </div>
       )}
