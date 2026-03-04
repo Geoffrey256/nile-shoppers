@@ -1,155 +1,106 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { User, Package, Bell, Heart, LogOut, Check, Trash2, ShoppingBag, Tag, Truck, Star } from "lucide-react";
+import { User, Package, Bell, Heart, LogOut, Check, Trash2, Info, AlertTriangle, Gift, CheckCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const sidebarLinks = [
-  { to: "/account/my", label: "My Account", icon: User },
-  { to: "/account/orders", label: "Orders", icon: Package },
-  { to: "/account/notifications", label: "Notifications", icon: Bell, active: true },
-  { to: "/wishlist", label: "Wishlist", icon: Heart },
+  { to: "/account/my", label: "My Account", icon: User, id: "my" },
+  { to: "/account/orders", label: "Orders", icon: Package, id: "orders" },
+  { to: "/account/notifications", label: "Notifications", icon: Bell, id: "notifications" },
+  { to: "/wishlist", label: "Wishlist", icon: Heart, id: "wishlist" },
 ];
 
-interface Notification {
-  id: string;
-  type: "order" | "promo" | "delivery" | "review";
-  title: string;
-  message: string;
-  time: string;
-  read: boolean;
-}
-
-const initialNotifications: Notification[] = [
-  { id: "1", type: "delivery", title: "Order Out for Delivery", message: "Your order ORD-193847 is out for delivery. Expected arrival by 4 PM today.", time: "2 hours ago", read: false },
-  { id: "2", type: "promo", title: "Flash Sale: Up to 50% Off!", message: "Don't miss our weekend flash sale on Electronics and Fashion. Limited time only!", time: "5 hours ago", read: false },
-  { id: "3", type: "order", title: "Order Confirmed", message: "Your order ORD-193847 has been confirmed and is being prepared for shipping.", time: "1 day ago", read: false },
-  { id: "4", type: "review", title: "Rate Your Purchase", message: "How was your Samsung Galaxy S24 Ultra? Leave a review and help other shoppers.", time: "3 days ago", read: true },
-  { id: "5", type: "promo", title: "New Arrivals in Computing", message: "Check out the latest laptops and accessories just added to our marketplace.", time: "5 days ago", read: true },
-  { id: "6", type: "delivery", title: "Order Delivered", message: "Your order ORD-284751 has been delivered successfully. Thank you for shopping with us!", time: "1 week ago", read: true },
-];
-
-const typeIcon: Record<string, { icon: typeof Bell; color: string }> = {
-  order: { icon: ShoppingBag, color: "text-primary bg-primary/10" },
-  promo: { icon: Tag, color: "text-accent bg-accent/10" },
-  delivery: { icon: Truck, color: "text-success bg-success/10" },
-  review: { icon: Star, color: "text-yellow-500 bg-yellow-500/10" },
-};
+const typeIcons: Record<string, any> = { info: Info, success: CheckCircle, warning: AlertTriangle, promo: Gift };
+const typeColors: Record<string, string> = { info: "text-primary", success: "text-success", warning: "text-accent", promo: "text-accent" };
 
 const Notifications = () => {
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const load = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+    setNotifications(data || []);
+    setLoading(false);
+  };
 
-  const markAllRead = () => setNotifications((ns) => ns.map((n) => ({ ...n, read: true })));
+  useEffect(() => {
+    if (!user) { navigate("/login"); return; }
+    load();
+    const channel = supabase.channel("user-notifs").on("postgres_changes", { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, () => load()).subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, navigate]);
 
-  const markRead = (id: string) =>
-    setNotifications((ns) => ns.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  const markRead = async (id: string) => { await supabase.from("notifications").update({ is_read: true } as any).eq("id", id); load(); };
+  const markAllRead = async () => { if (!user) return; await supabase.from("notifications").update({ is_read: true } as any).eq("user_id", user.id).eq("is_read", false); toast({ title: "All marked as read" }); load(); };
+  const deleteNotification = async (id: string) => { await supabase.from("notifications").delete().eq("id", id); load(); };
+  const handleSignOut = async () => { await signOut(); navigate("/login"); };
 
-  const deleteNotification = (id: string) =>
-    setNotifications((ns) => ns.filter((n) => n.id !== id));
-
-  const clearAll = () => setNotifications([]);
+  const unread = notifications.filter(n => !n.is_read).length;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1 py-6 px-4">
+      <main className="flex-1 py-4 sm:py-6 px-4">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-2xl font-bold text-foreground mb-6">Notifications</h1>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Sidebar */}
-            <div className="space-y-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">Notifications</h1>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6">
+            <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
               {sidebarLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    link.active
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  <link.icon className="w-4 h-4" />
-                  {link.label}
+                <Link key={link.to} to={link.to}
+                  className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                    link.id === "notifications" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
+                  }`}>
+                  <link.icon className="w-4 h-4" />{link.label}
                 </Link>
               ))}
-              <Separator className="my-3" />
-              <Link to="/login" className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors">
+              <Separator className="hidden md:block my-3" />
+              <button onClick={handleSignOut} className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors whitespace-nowrap">
                 <LogOut className="w-4 h-4" /> Sign Out
-              </Link>
+              </button>
             </div>
 
-            {/* Content */}
-            <div className="md:col-span-3">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-muted-foreground">
-                  {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}` : "All caught up!"}
-                </p>
-                <div className="flex gap-2">
-                  {unreadCount > 0 && (
-                    <Button variant="outline" size="sm" onClick={markAllRead}>
-                      <Check className="w-3.5 h-3.5 mr-1" /> Mark all read
-                    </Button>
-                  )}
-                  {notifications.length > 0 && (
-                    <Button variant="outline" size="sm" onClick={clearAll} className="text-destructive hover:text-destructive">
-                      <Trash2 className="w-3.5 h-3.5 mr-1" /> Clear all
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {notifications.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center py-16">
-                    <Bell className="w-12 h-12 text-muted-foreground opacity-30 mb-3" />
-                    <p className="font-medium text-foreground">No notifications</p>
-                    <p className="text-sm text-muted-foreground">You're all caught up!</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-2">
-                  {notifications.map((n) => {
-                    const { icon: Icon, color } = typeIcon[n.type];
-                    return (
-                      <div
-                        key={n.id}
-                        className={`flex items-start gap-3 p-4 rounded-lg border transition-colors cursor-pointer ${
-                          n.read ? "bg-card" : "bg-primary/5 border-primary/20"
-                        }`}
-                        onClick={() => markRead(n.id)}
-                      >
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${color}`}>
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className={`text-sm font-semibold text-foreground ${!n.read ? "" : "opacity-70"}`}>
-                              {n.title}
-                            </p>
-                            {!n.read && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
-                          </div>
-                          <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">{n.message}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{n.time}</p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="shrink-0 text-muted-foreground hover:text-destructive"
-                          onClick={(e) => { e.stopPropagation(); deleteNotification(n.id); }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    );
-                  })}
+            <div className="md:col-span-3 space-y-3">
+              {unread > 0 && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{unread} unread</span>
+                  <Button variant="outline" size="sm" onClick={markAllRead}><Check className="w-3 h-3 mr-1" /> Mark all read</Button>
                 </div>
               )}
+              {loading && <div className="flex justify-center py-8"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}
+              {!loading && notifications.length === 0 && (
+                <Card><CardContent className="py-8 text-center text-muted-foreground">No notifications yet</CardContent></Card>
+              )}
+              {notifications.map((n) => {
+                const Icon = typeIcons[n.type] || Info;
+                const color = typeColors[n.type] || "text-primary";
+                return (
+                  <Card key={n.id} className={`${!n.is_read ? "border-primary/30 bg-primary/5" : ""}`}>
+                    <CardContent className="flex items-start gap-3 py-3">
+                      <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${color}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm font-medium text-foreground ${!n.is_read ? "font-semibold" : ""}`}>{n.title}</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">{n.message}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{new Date(n.created_at).toLocaleString()}</p>
+                      </div>
+                      <div className="flex gap-1 shrink-0">
+                        {!n.is_read && <Button variant="ghost" size="sm" onClick={() => markRead(n.id)}><Check className="w-3 h-3" /></Button>}
+                        <Button variant="ghost" size="sm" onClick={() => deleteNotification(n.id)} className="text-destructive hover:text-destructive"><Trash2 className="w-3 h-3" /></Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </div>
