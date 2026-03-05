@@ -20,7 +20,7 @@ const categories = [
   { name: "Health & Beauty", slug: "health-beauty" },
   { name: "Computing", slug: "computing" },
   { name: "Aquariums", slug: "aquariums" },
-  { name: "Cooking Appliances", slug: "cooking-appliances" },
+  { name: "Kitchen Utensils", slug: "kitchen-utensils" },
   { name: "Hotel Booking", slug: "hotel-booking" },
 ];
 

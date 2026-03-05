@@ -9,7 +9,7 @@ const categories = [
   { name: "Health & Beauty", slug: "health-beauty", icon: Heart, color: "bg-primary/10 text-primary" },
   { name: "Computing", slug: "computing", icon: Laptop, color: "bg-accent/10 text-accent" },
   { name: "Aquariums", slug: "aquariums", icon: Fish, color: "bg-accent/10 text-accent" },
-  { name: "Cooking Appliances", slug: "cooking-appliances", icon: CookingPot, color: "bg-primary/10 text-primary" },
+  { name: "Kitchen Utensils", slug: "kitchen-utensils", icon: CookingPot, color: "bg-primary/10 text-primary" },
   { name: "Hotel Booking", slug: "hotel-booking", icon: Hotel, color: "bg-success/10 text-success" },
 ];
 
@@ -17,7 +17,7 @@ const CategoryGrid = () => {
   return (
     <section>
       <h2 className="text-xl font-bold text-foreground mb-4">Shop by Category</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3">
         {categories.map((cat) => (
           <Link
             key={cat.name}
