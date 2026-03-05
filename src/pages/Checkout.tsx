@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/currency";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -13,15 +15,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle2, MapPin, Phone, Truck, CreditCard, Smartphone, ShoppingBag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { QRCodeSVG } from "qrcode.react";
 
 const Checkout = () => {
   const { items, totalPrice, totalItems, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const [step, setStep] = useState<"shipping" | "payment" | "confirm">("shipping");
   const [paymentMethod, setPaymentMethod] = useState("momo");
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderNumber, setOrderNumber] = useState("");
+  const [qrData, setQrData] = useState("");
 
   const [form, setForm] = useState({
     fullName: "",
@@ -45,7 +51,48 @@ const Checkout = () => {
   const canProceedPayment =
     paymentMethod === "cod" || form.momoNumber.trim().length >= 10;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
+    const orderNum = `NS-${Date.now().toString(36).toUpperCase()}`;
+    const qr = JSON.stringify({
+      orderNumber: orderNum,
+      total: grandTotal,
+      customer: form.fullName,
+      items: items.length,
+    });
+
+    if (user) {
+      const orderItems = items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      }));
+
+      const { error } = await supabase.from("orders").insert({
+        user_id: user.id,
+        order_number: orderNum,
+        total: grandTotal,
+        items: orderItems,
+        qr_code_data: qr,
+        payment_method: paymentMethod === "momo" ? "MTN Mobile Money" : paymentMethod === "airtel" ? "Airtel Money" : "Cash on Delivery",
+        shipping_address: `${form.address}, ${form.city}`,
+        status: "pending",
+      });
+
+      if (!error) {
+        // Create notification
+        await supabase.from("notifications").insert({
+          user_id: user.id,
+          title: "Order Placed",
+          message: `Your order ${orderNum} for ${formatPrice(grandTotal)} has been placed successfully.`,
+          type: "order",
+        });
+      }
+    }
+
+    setOrderNumber(orderNum);
+    setQrData(qr);
     setOrderPlaced(true);
     clearCart();
   };
@@ -59,9 +106,7 @@ const Checkout = () => {
             <ShoppingBag className="w-16 h-16 mx-auto text-muted-foreground opacity-40" />
             <h2 className="text-xl font-semibold text-foreground">Your cart is empty</h2>
             <p className="text-muted-foreground">Add some items before checking out.</p>
-            <Button onClick={() => navigate("/")} className="mt-2">
-              Continue Shopping
-            </Button>
+            <Button onClick={() => navigate("/")} className="mt-2">Continue Shopping</Button>
           </div>
         </main>
         <Footer />
@@ -80,22 +125,24 @@ const Checkout = () => {
             </div>
             <h2 className="text-2xl font-bold text-foreground">Order Placed Successfully!</h2>
             <p className="text-muted-foreground">
-              Thank you, <span className="font-medium text-foreground">{form.fullName}</span>. Your order
-              #{Math.floor(100000 + Math.random() * 900000)} has been received. We'll contact you at{" "}
-              <span className="font-medium text-foreground">{form.phone}</span> to confirm delivery.
+              Thank you, <span className="font-medium text-foreground">{form.fullName}</span>. Your order #{orderNumber} has been received.
             </p>
+
+            {qrData && (
+              <div className="flex justify-center py-4">
+                <QRCodeSVG value={qrData} size={160} level="M" />
+              </div>
+            )}
+
             <div className="bg-secondary rounded-lg p-4 text-sm text-left space-y-1">
+              <p><span className="text-muted-foreground">Order #:</span> {orderNumber}</p>
               <p><span className="text-muted-foreground">Delivery to:</span> {form.address}, {form.city}</p>
               <p><span className="text-muted-foreground">Payment:</span> {paymentMethod === "momo" ? "MTN Mobile Money" : paymentMethod === "airtel" ? "Airtel Money" : "Cash on Delivery"}</p>
               <p><span className="text-muted-foreground">Total paid:</span> {formatPrice(grandTotal)}</p>
             </div>
             <div className="flex gap-3 pt-2">
-              <Button onClick={() => navigate("/")} className="flex-1">
-                Continue Shopping
-              </Button>
-              <Button variant="outline" onClick={() => navigate("/track-order")} className="flex-1">
-                Track Order
-              </Button>
+              <Button onClick={() => navigate("/")} className="flex-1">Continue Shopping</Button>
+              <Button variant="outline" onClick={() => navigate("/account/orders")} className="flex-1">View Orders</Button>
             </div>
           </div>
         </main>
@@ -109,7 +156,6 @@ const Checkout = () => {
       <Header />
       <main className="flex-1 py-6 px-4">
         <div className="max-w-5xl mx-auto">
-          {/* Steps indicator */}
           <div className="flex items-center justify-center gap-2 mb-8">
             {[
               { key: "shipping", label: "Shipping", icon: MapPin },
@@ -138,7 +184,6 @@ const Checkout = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left – Form */}
             <div className="lg:col-span-2 space-y-6">
               {step === "shipping" && (
                 <Card>
@@ -174,16 +219,12 @@ const Checkout = () => {
                       <Label htmlFor="notes">Order Notes (optional)</Label>
                       <Textarea id="notes" placeholder="Any special delivery instructions..." value={form.notes} onChange={(e) => update("notes", e.target.value)} rows={3} />
                     </div>
-
                     <div className="flex items-center gap-2 text-sm bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
                       <Truck className="w-4 h-4 text-green-600 shrink-0" />
                       <span className="text-green-700 dark:text-green-400">
-                        {form.city.toLowerCase().includes("kampala")
-                          ? "Free delivery within Kampala!"
-                          : "Delivery fee: UGX 5,000 outside Kampala"}
+                        {form.city.toLowerCase().includes("kampala") ? "Free delivery within Kampala!" : "Delivery fee: UGX 5,000 outside Kampala"}
                       </span>
                     </div>
-
                     <Button className="w-full" size="lg" disabled={!canProceedShipping} onClick={() => setStep("payment")}>
                       Continue to Payment
                     </Button>
@@ -220,28 +261,15 @@ const Checkout = () => {
                         </label>
                       ))}
                     </RadioGroup>
-
                     {(paymentMethod === "momo" || paymentMethod === "airtel") && (
                       <div className="space-y-2">
-                        <Label htmlFor="momoNumber">
-                          {paymentMethod === "momo" ? "MTN MoMo" : "Airtel Money"} Number
-                        </Label>
-                        <Input
-                          id="momoNumber"
-                          placeholder="+256 7XX XXX XXX"
-                          value={form.momoNumber}
-                          onChange={(e) => update("momoNumber", e.target.value)}
-                        />
+                        <Label htmlFor="momoNumber">{paymentMethod === "momo" ? "MTN MoMo" : "Airtel Money"} Number</Label>
+                        <Input id="momoNumber" placeholder="+256 7XX XXX XXX" value={form.momoNumber} onChange={(e) => update("momoNumber", e.target.value)} />
                       </div>
                     )}
-
                     <div className="flex gap-3">
-                      <Button variant="outline" onClick={() => setStep("shipping")} className="flex-1">
-                        Back
-                      </Button>
-                      <Button className="flex-1" size="lg" disabled={!canProceedPayment} onClick={() => setStep("confirm")}>
-                        Review Order
-                      </Button>
+                      <Button variant="outline" onClick={() => setStep("shipping")} className="flex-1">Back</Button>
+                      <Button className="flex-1" size="lg" disabled={!canProceedPayment} onClick={() => setStep("confirm")}>Review Order</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -262,16 +290,13 @@ const Checkout = () => {
                       <p className="text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" /> {form.address}, {form.city}</p>
                       {form.notes && <p className="text-muted-foreground italic">"{form.notes}"</p>}
                     </div>
-
                     <div className="bg-secondary rounded-lg p-4 space-y-2 text-sm">
                       <p className="font-medium text-foreground">Payment</p>
                       <p className="text-muted-foreground">
                         {paymentMethod === "momo" ? `MTN Mobile Money – ${form.momoNumber}` : paymentMethod === "airtel" ? `Airtel Money – ${form.momoNumber}` : "Cash on Delivery"}
                       </p>
                     </div>
-
                     <Separator />
-
                     <div className="space-y-3">
                       {items.map((item) => (
                         <div key={item.id} className="flex items-center gap-3">
@@ -284,11 +309,8 @@ const Checkout = () => {
                         </div>
                       ))}
                     </div>
-
                     <div className="flex gap-3 pt-2">
-                      <Button variant="outline" onClick={() => setStep("payment")} className="flex-1">
-                        Back
-                      </Button>
+                      <Button variant="outline" onClick={() => setStep("payment")} className="flex-1">Back</Button>
                       <Button className="flex-1" size="lg" onClick={handlePlaceOrder}>
                         Place Order – {formatPrice(grandTotal)}
                       </Button>
@@ -298,7 +320,6 @@ const Checkout = () => {
               )}
             </div>
 
-            {/* Right – Order Summary */}
             <div>
               <Card className="sticky top-4">
                 <CardHeader>

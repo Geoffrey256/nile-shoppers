@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import gasCylindersHero from "@/assets/gas-cylinders-hero.jpg";
 
 const slides = [
   {
@@ -21,8 +22,8 @@ const slides = [
     image: "https://images.unsplash.com/photo-1556909114-44e3e70034e2?w=1200&h=500&fit=crop&auto=format",
     title: "Kitchen Essentials",
     subtitle: "Air fryers, blenders & more for your home",
-    cta: "Shop Cooking Appliances",
-    link: "/category/cooking-appliances",
+    cta: "Shop Kitchen Utensils",
+    link: "/category/kitchen-utensils",
   },
   {
     image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=1200&h=500&fit=crop&auto=format",
@@ -58,6 +59,13 @@ const slides = [
     subtitle: "Upgrade your space with top picks",
     cta: "Shop Home & Office",
     link: "/category/home-office",
+  },
+  {
+    image: gasCylindersHero,
+    title: "Gas & Kitchen Utensils",
+    subtitle: "Cooking gas, cylinders, stoves & more",
+    cta: "Shop Kitchen Utensils",
+    link: "/category/kitchen-utensils",
   },
 ];
 
