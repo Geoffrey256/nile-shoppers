@@ -8,25 +8,41 @@ import { Home } from "lucide-react";
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const validate = () => {
+    const errs: Record<string, string> = {};
+    if (!name.trim()) errs.name = "Full name is required";
+    if (!email.trim()) errs.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Enter a valid email";
+    if (!phone.trim()) errs.phone = "Phone number is required";
+    else if (phone.startsWith("07")) errs.phone = "Do not start with 07. Use format like 7XXXXXXXX";
+    else if (!/^\d{10,}$/.test(phone.replace(/\s/g, ""))) errs.phone = "Phone must be at least 10 digits";
+    if (!password) errs.password = "Password is required";
+    else if (password.length < 6) errs.password = "Password must be at least 6 characters";
+    if (password !== confirm) errs.confirm = "Passwords do not match";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const clearError = (field: string) => setErrors(e => { const n = {...e}; delete n[field]; return n; });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirm) {
-      toast({ title: "Passwords do not match", variant: "destructive" });
-      return;
-    }
+    if (!validate()) return;
     setLoading(true);
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: name },
+        data: { full_name: name, phone },
         emailRedirectTo: window.location.origin,
       },
     });
@@ -50,6 +66,16 @@ const Signup = () => {
     }
   };
 
+  const Field = ({ label, field, type = "text", placeholder, value, onChange }: any) => (
+    <div>
+      <label className="block text-sm font-medium text-foreground mb-1">{label}</label>
+      <input type={type} value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { onChange(e.target.value); clearError(field); }}
+        placeholder={placeholder}
+        className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground ${errors[field] ? "border-destructive" : "border-secondary"}`} />
+      {errors[field] && <p className="text-xs text-destructive mt-1">{errors[field]}</p>}
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative bg-gradient-to-br from-primary/90 via-primary to-primary-darker">
       <div className="absolute inset-0 opacity-10" style={{
@@ -61,7 +87,7 @@ const Signup = () => {
       <div className="absolute top-1/4 right-10 text-primary-foreground/20 text-4xl hidden lg:block">🏷️</div>
       <div className="absolute bottom-1/3 left-16 text-primary-foreground/20 text-5xl hidden lg:block">🛍️</div>
 
-      <div className="w-full max-w-md bg-card/95 backdrop-blur-sm p-6 sm:p-8 rounded-lg shadow-xl relative z-10">
+      <div className="w-full max-w-md bg-card/95 backdrop-blur-sm p-6 sm:p-8 rounded-lg shadow-xl relative z-10 my-8">
         <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mb-4">
           <Home className="w-4 h-4" /> Back to Home
         </Link>
@@ -89,26 +115,11 @@ const Signup = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">Full name</label>
-            <input type="text" required value={name} onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">Email address</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">Password</label>
-            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">Confirm password</label>
-            <input type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground" />
-          </div>
+          <Field label="Full name" field="name" value={name} onChange={setName} placeholder="John Doe" />
+          <Field label="Email address" field="email" type="email" value={email} onChange={setEmail} placeholder="you@example.com" />
+          <Field label="Phone number" field="phone" value={phone} onChange={setPhone} placeholder="7XXXXXXXXX (10 digits)" />
+          <Field label="Password" field="password" type="password" value={password} onChange={setPassword} />
+          <Field label="Confirm password" field="confirm" type="password" value={confirm} onChange={setConfirm} />
           <button type="submit" disabled={loading}
             className="w-full bg-primary text-primary-foreground py-2 rounded font-semibold hover:opacity-90 transition disabled:opacity-50">
             {loading ? "Creating account…" : "Sign up"}
