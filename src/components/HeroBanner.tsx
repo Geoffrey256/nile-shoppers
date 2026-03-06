@@ -86,7 +86,7 @@ const HeroBanner = () => {
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
         {slides.map((slide, i) => (
-          <div key={i} className="min-w-full relative aspect-[21/9]">
+          <div key={i} className="min-w-full relative aspect-[16/9] sm:aspect-[2/1] md:aspect-[21/9]">
             <img
               src={slide.image}
               alt={slide.title}
@@ -94,13 +94,13 @@ const HeroBanner = () => {
               loading={i === 0 ? "eager" : "lazy"}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 to-transparent flex items-center">
-              <div className="container">
-                <div className="max-w-md text-primary-foreground">
-                  <h2 className="text-3xl md:text-5xl font-black mb-2">{slide.title}</h2>
-                  <p className="text-lg md:text-xl mb-4 opacity-90">{slide.subtitle}</p>
+              <div className="container px-4 sm:px-6">
+                <div className="max-w-xs sm:max-w-sm md:max-w-md text-primary-foreground">
+                  <h2 className="text-xl sm:text-3xl md:text-5xl font-black mb-1 sm:mb-2">{slide.title}</h2>
+                  <p className="text-sm sm:text-lg md:text-xl mb-2 sm:mb-4 opacity-90 line-clamp-2">{slide.subtitle}</p>
                   <Link
                     to={slide.link}
-                    className="inline-block bg-accent text-accent-foreground font-bold px-8 py-3 rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wide"
+                    className="inline-block bg-accent text-accent-foreground font-bold px-4 sm:px-8 py-2 sm:py-3 rounded-lg hover:opacity-90 transition-opacity text-xs sm:text-sm uppercase tracking-wide"
                   >
                     {slide.cta}
                   </Link>
@@ -113,23 +113,23 @@ const HeroBanner = () => {
 
       <button
         onClick={() => setCurrent((prev) => (prev - 1 + slides.length) % slides.length)}
-        className="absolute left-3 top-1/2 -translate-y-1/2 bg-card/80 backdrop-blur-sm rounded-full p-2 hover:bg-card transition-colors"
+        className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 bg-card/80 backdrop-blur-sm rounded-full p-1.5 sm:p-2 hover:bg-card transition-colors"
       >
-        <ChevronLeft className="w-5 h-5 text-foreground" />
+        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-foreground" />
       </button>
       <button
         onClick={() => setCurrent((prev) => (prev + 1) % slides.length)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 bg-card/80 backdrop-blur-sm rounded-full p-2 hover:bg-card transition-colors"
+        className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 bg-card/80 backdrop-blur-sm rounded-full p-1.5 sm:p-2 hover:bg-card transition-colors"
       >
-        <ChevronRight className="w-5 h-5 text-foreground" />
+        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-foreground" />
       </button>
 
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:gap-2">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-colors ${
+            className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors ${
               i === current ? "bg-accent" : "bg-card/60"
             }`}
           />

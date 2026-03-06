@@ -10,11 +10,23 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const validate = () => {
+    const errs: typeof errors = {};
+    if (!email.trim()) errs.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Enter a valid email";
+    if (!password) errs.password = "Password is required";
+    else if (password.length < 6) errs.password = "Password must be at least 6 characters";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
@@ -39,12 +51,10 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative bg-gradient-to-br from-primary/90 via-primary to-primary-darker">
-      {/* Background pattern */}
       <div className="absolute inset-0 opacity-10" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }} />
 
-      {/* Floating e-commerce icons */}
       <div className="absolute top-10 left-10 text-primary-foreground/20 text-6xl hidden md:block">🛒</div>
       <div className="absolute bottom-20 right-16 text-primary-foreground/20 text-5xl hidden md:block">📦</div>
       <div className="absolute top-1/4 right-10 text-primary-foreground/20 text-4xl hidden lg:block">🏷️</div>
@@ -80,13 +90,15 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Email address</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground" />
+            <input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErrors(er => ({...er, email: undefined})); }}
+              className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground ${errors.email ? "border-destructive" : "border-secondary"}`} />
+            {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Password</label>
-            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-secondary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground" />
+            <input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setErrors(er => ({...er, password: undefined})); }}
+              className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground ${errors.password ? "border-destructive" : "border-secondary"}`} />
+            {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
           </div>
           <button type="submit" disabled={loading}
             className="w-full bg-primary text-primary-foreground py-2 rounded font-semibold hover:opacity-90 transition disabled:opacity-50">

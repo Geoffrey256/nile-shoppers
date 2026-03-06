@@ -28,6 +28,7 @@ const Checkout = () => {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [qrData, setQrData] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [form, setForm] = useState({
     fullName: "",
@@ -39,17 +40,48 @@ const Checkout = () => {
     momoNumber: "",
   });
 
-  const update = (field: string, value: string) =>
+  const update = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => { const n = {...prev}; delete n[field]; return n; });
+  };
 
   const deliveryFee = form.city.toLowerCase().includes("kampala") ? 0 : 5000;
   const grandTotal = totalPrice + deliveryFee;
 
-  const canProceedShipping =
-    form.fullName.trim() && form.phone.trim() && form.address.trim() && form.city.trim();
+  const validatePhone = (val: string) => {
+    if (!val.trim()) return "Phone number is required";
+    if (val.startsWith("07")) return "Do not start with 07. Use format like 7XXXXXXXX";
+    if (!/^\d{10,}$/.test(val.replace(/\s/g, ""))) return "Phone must be at least 10 digits";
+    return null;
+  };
 
-  const canProceedPayment =
-    paymentMethod === "cod" || form.momoNumber.trim().length >= 10;
+  const validateShipping = () => {
+    const errs: Record<string, string> = {};
+    if (!form.fullName.trim()) errs.fullName = "Full name is required";
+    const phoneErr = validatePhone(form.phone);
+    if (phoneErr) errs.phone = phoneErr;
+    if (!form.address.trim()) errs.address = "Address is required";
+    if (!form.city.trim()) errs.city = "City is required";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const validatePayment = () => {
+    if (paymentMethod === "cod") return true;
+    const errs: Record<string, string> = {};
+    const phoneErr = validatePhone(form.momoNumber);
+    if (phoneErr) errs.momoNumber = phoneErr;
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const proceedToPayment = () => {
+    if (validateShipping()) setStep("payment");
+  };
+
+  const proceedToConfirm = () => {
+    if (validatePayment()) setStep("confirm");
+  };
 
   const handlePlaceOrder = async () => {
     const orderNum = `NS-${Date.now().toString(36).toUpperCase()}`;
@@ -81,7 +113,6 @@ const Checkout = () => {
       });
 
       if (!error) {
-        // Create notification
         await supabase.from("notifications").insert({
           user_id: user.id,
           title: "Order Placed",
@@ -102,7 +133,7 @@ const Checkout = () => {
       <div className="min-h-screen flex flex-col bg-background">
         <Header />
         <main className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-4 px-4">
             <ShoppingBag className="w-16 h-16 mx-auto text-muted-foreground opacity-40" />
             <h2 className="text-xl font-semibold text-foreground">Your cart is empty</h2>
             <p className="text-muted-foreground">Add some items before checking out.</p>
@@ -127,13 +158,11 @@ const Checkout = () => {
             <p className="text-muted-foreground">
               Thank you, <span className="font-medium text-foreground">{form.fullName}</span>. Your order #{orderNumber} has been received.
             </p>
-
             {qrData && (
               <div className="flex justify-center py-4">
                 <QRCodeSVG value={qrData} size={160} level="M" />
               </div>
             )}
-
             <div className="bg-secondary rounded-lg p-4 text-sm text-left space-y-1">
               <p><span className="text-muted-foreground">Order #:</span> {orderNumber}</p>
               <p><span className="text-muted-foreground">Delivery to:</span> {form.address}, {form.city}</p>
@@ -151,44 +180,46 @@ const Checkout = () => {
     );
   }
 
+  const ErrorMsg = ({ field }: { field: string }) => errors[field] ? <p className="text-xs text-destructive mt-1">{errors[field]}</p> : null;
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1 py-6 px-4">
+      <main className="flex-1 py-4 sm:py-6 px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-2 mb-8">
+          <div className="flex items-center justify-center gap-2 mb-6 sm:mb-8">
             {[
               { key: "shipping", label: "Shipping", icon: MapPin },
               { key: "payment", label: "Payment", icon: CreditCard },
               { key: "confirm", label: "Confirm", icon: CheckCircle2 },
             ].map((s, i) => (
-              <div key={s.key} className="flex items-center gap-2">
+              <div key={s.key} className="flex items-center gap-1 sm:gap-2">
                 <button
                   onClick={() => {
                     if (s.key === "shipping") setStep("shipping");
-                    if (s.key === "payment" && canProceedShipping) setStep("payment");
-                    if (s.key === "confirm" && canProceedShipping && canProceedPayment) setStep("confirm");
+                    if (s.key === "payment" && validateShipping()) setStep("payment");
+                    if (s.key === "confirm" && validateShipping() && validatePayment()) setStep("confirm");
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${
                     step === s.key
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-muted-foreground"
                   }`}
                 >
-                  <s.icon className="w-4 h-4" />
-                  {s.label}
+                  <s.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">{s.label}</span>
                 </button>
-                {i < 2 && <div className="w-8 h-px bg-border" />}
+                {i < 2 && <div className="w-4 sm:w-8 h-px bg-border" />}
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="lg:col-span-2 space-y-6">
               {step === "shipping" && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
+                    <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                       <MapPin className="w-5 h-5 text-primary" /> Shipping Information
                     </CardTitle>
                   </CardHeader>
@@ -196,11 +227,13 @@ const Checkout = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="fullName">Full Name *</Label>
-                        <Input id="fullName" placeholder="John Doe" value={form.fullName} onChange={(e) => update("fullName", e.target.value)} />
+                        <Input id="fullName" placeholder="John Doe" value={form.fullName} onChange={(e) => update("fullName", e.target.value)} className={errors.fullName ? "border-destructive" : ""} />
+                        <ErrorMsg field="fullName" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="phone">Phone Number *</Label>
-                        <Input id="phone" placeholder="+256 7XX XXX XXX" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+                        <Input id="phone" placeholder="7XXXXXXXXX (10 digits)" value={form.phone} onChange={(e) => update("phone", e.target.value)} className={errors.phone ? "border-destructive" : ""} />
+                        <ErrorMsg field="phone" />
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -209,11 +242,13 @@ const Checkout = () => {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="address">Delivery Address *</Label>
-                      <Input id="address" placeholder="Street, Area, Landmark" value={form.address} onChange={(e) => update("address", e.target.value)} />
+                      <Input id="address" placeholder="Street, Area, Landmark" value={form.address} onChange={(e) => update("address", e.target.value)} className={errors.address ? "border-destructive" : ""} />
+                      <ErrorMsg field="address" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="city">City / Town *</Label>
-                      <Input id="city" placeholder="Kampala" value={form.city} onChange={(e) => update("city", e.target.value)} />
+                      <Input id="city" placeholder="Kampala" value={form.city} onChange={(e) => update("city", e.target.value)} className={errors.city ? "border-destructive" : ""} />
+                      <ErrorMsg field="city" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="notes">Order Notes (optional)</Label>
@@ -225,7 +260,7 @@ const Checkout = () => {
                         {form.city.toLowerCase().includes("kampala") ? "Free delivery within Kampala!" : "Delivery fee: UGX 5,000 outside Kampala"}
                       </span>
                     </div>
-                    <Button className="w-full" size="lg" disabled={!canProceedShipping} onClick={() => setStep("payment")}>
+                    <Button className="w-full" size="lg" onClick={proceedToPayment}>
                       Continue to Payment
                     </Button>
                   </CardContent>
@@ -235,7 +270,7 @@ const Checkout = () => {
               {step === "payment" && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
+                    <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                       <CreditCard className="w-5 h-5 text-primary" /> Payment Method
                     </CardTitle>
                   </CardHeader>
@@ -248,7 +283,7 @@ const Checkout = () => {
                       ].map((pm) => (
                         <label
                           key={pm.value}
-                          className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${
+                          className={`flex items-center gap-3 p-3 sm:p-4 rounded-lg border cursor-pointer transition-colors ${
                             paymentMethod === pm.value ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
                           }`}
                         >
@@ -264,12 +299,13 @@ const Checkout = () => {
                     {(paymentMethod === "momo" || paymentMethod === "airtel") && (
                       <div className="space-y-2">
                         <Label htmlFor="momoNumber">{paymentMethod === "momo" ? "MTN MoMo" : "Airtel Money"} Number</Label>
-                        <Input id="momoNumber" placeholder="+256 7XX XXX XXX" value={form.momoNumber} onChange={(e) => update("momoNumber", e.target.value)} />
+                        <Input id="momoNumber" placeholder="7XXXXXXXXX (10 digits)" value={form.momoNumber} onChange={(e) => update("momoNumber", e.target.value)} className={errors.momoNumber ? "border-destructive" : ""} />
+                        <ErrorMsg field="momoNumber" />
                       </div>
                     )}
                     <div className="flex gap-3">
                       <Button variant="outline" onClick={() => setStep("shipping")} className="flex-1">Back</Button>
-                      <Button className="flex-1" size="lg" disabled={!canProceedPayment} onClick={() => setStep("confirm")}>Review Order</Button>
+                      <Button className="flex-1" size="lg" onClick={proceedToConfirm}>Review Order</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -278,7 +314,7 @@ const Checkout = () => {
               {step === "confirm" && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
+                    <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                       <CheckCircle2 className="w-5 h-5 text-primary" /> Review & Confirm
                     </CardTitle>
                   </CardHeader>
@@ -300,7 +336,7 @@ const Checkout = () => {
                     <div className="space-y-3">
                       {items.map((item) => (
                         <div key={item.id} className="flex items-center gap-3">
-                          <img src={item.image} alt={item.name} className="w-12 h-12 rounded-md object-cover" />
+                          <img src={item.image} alt={item.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover" />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground line-clamp-1">{item.name}</p>
                             <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
@@ -323,13 +359,13 @@ const Checkout = () => {
             <div>
               <Card className="sticky top-4">
                 <CardHeader>
-                  <CardTitle className="text-lg">Order Summary</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3 max-h-64 overflow-y-auto">
                     {items.map((item) => (
                       <div key={item.id} className="flex gap-3 items-start">
-                        <img src={item.image} alt={item.name} className="w-12 h-12 rounded-md object-cover shrink-0" />
+                        <img src={item.image} alt={item.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-foreground line-clamp-1">{item.name}</p>
                           <p className="text-xs text-muted-foreground">× {item.quantity}</p>
